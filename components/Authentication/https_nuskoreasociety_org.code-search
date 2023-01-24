@@ -1,0 +1,37 @@
+# Query: https://nuskoreasociety.org
+
+14 results - 10 files
+
+.env:
+  7: REACT_APP_HOST="https://nuskoreasociety.org"
+
+components/Authentication/SignOutButton.tsx:
+  7:       const url = REACT_APP_HOST + "/api/auth/signout";
+
+components/Drawer/DrawerContent.tsx:
+  35:       const url = "https://nuskoreasociety.org" + "/api/auth/signout";
+
+components/Home/BoardPreviewList.tsx:
+  23:       "https://nuskoreasociety.org" + "/api/board/getBoard/" + boardType;
+  45:       "https://nuskoreasociety.org" + "/api/board/getPosts/" + boardType;
+  82:     const url = "https://nuskoreasociety.org" + "/api/post/getPosts/" + post.id;
+
+components/Home/PostPreviewItem.tsx:
+  23:       "https://nuskoreasociety.org" + "/api/post/getPost/" + postItem.id;
+
+components/Profile/EditInfoSection.tsx:
+  60:           "https://nuskoreasociety.org" + "/api/profile/editProfile/" + email;
+  74:           const logoutUrl = "https://nuskoreasociety.org" + "/api/auth/signout";
+  91:           "https://nuskoreasociety.org" +
+
+screens/Authentication/LoginScreen.tsx:
+  42:     const url = "https://nuskoreasociety.org" + "/api/auth/signin";
+
+screens/Authentication/SignUp/Forms/Others.tsx:
+  53:       const url = "https://nuskoreasociety.org" + "/api/auth/signup";
+
+screens/Home/Board/PostList.tsx:
+  59:       "https://nuskoreasociety.org" + "/api/board/getPosts/" + currentBoardPage;
+
+screens/Home/Profile/ProfileScreen.tsx:
+  31:       const url = "https://nuskoreasociety.org" + "/api/auth/signout";

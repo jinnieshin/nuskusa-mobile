@@ -39,7 +39,7 @@ import Graduates from "../screens/Authentication/SignUp/Forms/Graduates";
 import Others from "../screens/Authentication/SignUp/Forms/Others";
 import Congrats from "../screens/Authentication/SignUp/Congrats";
 import HomeScreen from "../screens/Home/HomeScreen";
-import FreshmenBoard from "../screens/Home/Board/PostList";
+import PostList from "../screens/Home/Board/PostList";
 import GeneralBoard from "../screens/Home/Board/GeneralBoard";
 import Announcement from "../screens/Home/Board/Announcement";
 import PostScreen from "../screens/Home/Board/PostScreen";
@@ -177,8 +177,8 @@ const Board = () => {
         }}
       />
       <BoardStack.Screen
-        name="FreshmenBoard"
-        component={FreshmenBoard}
+        name="PostList"
+        component={PostList}
         options={{
           headerShown: false,
         }}

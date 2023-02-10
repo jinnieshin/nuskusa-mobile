@@ -1,16 +1,25 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PostPreviewItem from "./PostPreviewItem";
-import { PostSummary } from "../../types/PostSummary";
+import { PostSummary } from "../../../types/PostSummary";
+import { setCurrentBoardPage } from "../../../redux/features/currentBoardPage";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
 
 type Props = {
+  navigation: any;
   boardType: string;
 };
 
-const BoardPreviewList = ({ boardType }: Props) => {
+const BoardPreviewList = ({ navigation, boardType }: Props) => {
   const [board, setBoard] = useState({});
   const [permission, setPermission] = useState({});
   const [postArr, setPostArray] = useState<PostSummary[]>([]);
@@ -19,6 +28,13 @@ const BoardPreviewList = ({ boardType }: Props) => {
     fetchBoard().catch(console.error);
     fetchPosts().catch(console.error);
   }, [boardType]);
+
+  const dispatch = useDispatch();
+
+  const navigateBoard = () => {
+    dispatch(setCurrentBoardPage(boardType));
+    navigation.navigate("PostList", { boardType: boardType });
+  };
 
   const fetchBoard = async () => {
     const url = REACT_APP_HOST + "/api/board/getBoard/" + boardType;
@@ -93,26 +109,34 @@ const BoardPreviewList = ({ boardType }: Props) => {
   };
 
   return (
-    <View style={{ justifyContent: "space-between" }}>
-      {/* <Text>{boardType}</Text> */}
-      <View style={styles.itemsContainer}>
-        <FlatList
+    <View>
+      <View style={{ justifyContent: "space-between" }}>
+        {/* <Text>{boardType}</Text> */}
+        <View style={styles.itemsContainer}>
+          {/* <FlatList
           data={postArr}
           renderItem={({ item }) => (
             // <View style={{width: }}>
+            
+            // </View>
+          )}
+          showsVerticalScrollIndicator={false}
+        /> */}
+          {postArr.map((item) => (
             <PostPreviewItem
               post={item}
               content={item.title}
               time={1}
               upvoteCount={1}
             />
-            // </View>
-          )}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-      <View style={styles.viewAllContainer}>
-        <Text style={styles.viewAllButtonText}>+ View All</Text>
+          ))}
+        </View>
+        <TouchableOpacity
+          style={styles.viewAllContainer}
+          onPress={navigateBoard}
+        >
+          <Text style={styles.viewAllButtonText}>+ View All</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

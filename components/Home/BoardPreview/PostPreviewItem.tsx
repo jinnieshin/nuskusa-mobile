@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import { PostSummary } from "../../types/PostSummary";
+import { PostSummary } from "../../../types/PostSummary";
 import { useEffect, useState } from "react";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";

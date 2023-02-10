@@ -1,15 +1,22 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RenderHTML from "react-native-render-html";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
+import Comments from "./Comments";
+//@ts-ignore
+import { REACT_APP_HOST } from "@env";
 
 const PostContent = ({
+  postId,
   title,
   content,
 }: {
+  postId: number;
   title: string;
   content: string;
 }) => {
+  const [commentArr, setCommentArr] = useState<any>([]);
+
   const source = {
     html: content,
   };
@@ -27,6 +34,25 @@ const PostContent = ({
       enableExperimentalPercentWidth: true,
     },
   };
+
+  const fetchComments = async () => {
+    const url = REACT_APP_HOST + "/api/post/getPostComments/" + postId;
+    const response = await fetch(url, {
+      method: "GET",
+    });
+    console.log(url);
+    console.log(response.status);
+    if (response.status == 200) {
+      const commentArr = await response.json();
+      console.log("Comment", commentArr);
+      setCommentArr(commentArr);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments().catch(console.error);
+    console.log("slfjasldkfjaslk", commentArr.length);
+  }, [postId]);
 
   return (
     <View style={styles.container}>
@@ -46,7 +72,25 @@ const PostContent = ({
         <FontAwesome5 name="comment" size={22} color="black" />
         <Text style={styles.counts}> 3</Text>
         <Feather name="heart" size={23} color="black" />
-        <Text style={styles.counts}> 3</Text>
+        <Text style={styles.counts}> 4</Text>
+      </View>
+      <View>
+        {commentArr.map((item: any) => {
+          return (
+            <Comments
+              id={item.id}
+              author={item.author.name}
+              content={item.content}
+              upvoteCount={item.upvoteCount}
+              upvoted={item.upvoted}
+              postId={item.post}
+              lastModified={new Date(item.updatedAt)}
+              // replyTo={item.replyTo}
+              isMine={item.isMine}
+              profileImage={item.author.profileImageUrl}
+            />
+          );
+        })}
       </View>
     </View>
   );

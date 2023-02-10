@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-
+import { StyleSheet, Dimensions } from "react-native";
+import { View, Text } from "../../../components/Themed";
 import React from "react";
 import Banner from "../../../components/Banner";
 import BoardTypeSelect from "../../../components/Board/BoardTypeSelect";
@@ -11,32 +11,32 @@ const BoardScreen = ({ navigation }: { navigation: any }) => {
 
   const navigateAnnouncement = () => {
     dispatch(setCurrentBoardPage("announcement"));
-    navigation.navigate("FreshmenBoard", { boardType: "announcement" });
+    navigation.navigate("PostList", { boardType: "announcement" });
   };
   const navigateFreshmen = () => {
     dispatch(setCurrentBoardPage("freshmen"));
-    navigation.navigate("FreshmenBoard", { boardType: "freshmen" });
+    navigation.navigate("PostList", { boardType: "freshmen" });
   };
   const navigateGeneral = () => {
     dispatch(setCurrentBoardPage("general"));
-    navigation.navigate("FreshmenBoard", { boardType: "general" });
+    navigation.navigate("PostList", { boardType: "general" });
   };
 
   const navigateGraduated = () => {
     dispatch(setCurrentBoardPage("graduated"));
-    navigation.navigate("FreshmenBoard", { boardType: "graduated" });
+    navigation.navigate("PostList", { boardType: "graduated" });
   };
   const navigateMarket = () => {
     dispatch(setCurrentBoardPage("market"));
-    navigation.navigate("FreshmenBoard", { boardType: "market" });
+    navigation.navigate("PostList", { boardType: "market" });
   };
   const navigateJobs = () => {
     dispatch(setCurrentBoardPage("jobs"));
-    navigation.navigate("FreshmenBoard", { boardType: "jobs" });
+    navigation.navigate("PostList", { boardType: "jobs" });
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Banner
         navigation={navigation}
         iconLeft="menu"

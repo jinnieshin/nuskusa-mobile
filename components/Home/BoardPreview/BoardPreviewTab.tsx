@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import BoardPreviewList from "./BoardPreviewList";
 
-const BoardPreviewTab = () => {
+const BoardPreviewTab = ({ navigation }: { navigation: any }) => {
   const [tab, setTab] = useState<string>("Hot");
 
   const handleHotPress = () => {
@@ -36,7 +36,7 @@ const BoardPreviewTab = () => {
           <View
             style={[
               styles.tabIndivWrapper,
-              { backgroundColor: tab != "Hot" ? "#DADADA" : "#e7e8e9" },
+              { backgroundColor: tab != "Hot" ? "#DADADA" : "#F3F4F6" },
             ]}
           >
             <Text style={styles.tabsText}>HOT</Text>
@@ -46,7 +46,7 @@ const BoardPreviewTab = () => {
           <View
             style={[
               styles.tabIndivWrapper,
-              { backgroundColor: tab != "general" ? "#DADADA" : "#e7e8e9" },
+              { backgroundColor: tab != "general" ? "#DADADA" : "#F3F4F6" },
             ]}
           >
             <Text style={styles.tabsText}>자유</Text>
@@ -56,7 +56,7 @@ const BoardPreviewTab = () => {
           <View
             style={[
               styles.tabIndivWrapper,
-              { backgroundColor: tab != "freshmen" ? "#DADADA" : "#e7e8e9" },
+              { backgroundColor: tab != "freshmen" ? "#DADADA" : "#F3F4F6" },
             ]}
           >
             <Text style={styles.tabsText}>신입생</Text>
@@ -66,14 +66,14 @@ const BoardPreviewTab = () => {
           <View
             style={[
               styles.tabIndivWrapper,
-              { backgroundColor: tab != "graduated" ? "#DADADA" : "#e7e8e9" },
+              { backgroundColor: tab != "graduated" ? "#DADADA" : "#F3F4F6" },
             ]}
           >
             <Text style={styles.tabsText}>졸업생</Text>
           </View>
         </TouchableWithoutFeedback>
       </View>
-      <BoardPreviewList boardType={tab} />
+      <BoardPreviewList navigation={navigation} boardType={tab} />
     </View>
   );
 };
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     width: width * 0.9,
     height: 270,
-    backgroundColor: "#e7e8e9",
+    backgroundColor: "#F3F4F6",
   },
   tabsContainer: {
     flexDirection: "row",

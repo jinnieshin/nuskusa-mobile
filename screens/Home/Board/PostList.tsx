@@ -1,12 +1,11 @@
 import {
-  View,
-  Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
+import { View, Text } from "../../../components/Themed";
 import React, { useEffect, useState } from "react";
 import Banner from "../../../components/Banner";
 import BoardHeader from "../../../components/Board/BoardHeader";
@@ -21,13 +20,7 @@ import { setShowBoardDropDownList } from "../../../redux/features/showBoardDropD
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
 
-const FreshmenBoard = ({
-  navigation,
-  route,
-}: {
-  navigation: any;
-  route: any;
-}) => {
+const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   // const boardType = "freshmen";
   const [postArr, setPostArray] = useState<PostSummary[]>([]);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
@@ -94,7 +87,7 @@ const FreshmenBoard = ({
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Banner
         navigation={navigation}
         iconLeft="menu"
@@ -144,7 +137,7 @@ const FreshmenBoard = ({
   );
 };
 
-export default FreshmenBoard;
+export default PostList;
 
 const { width, height } = Dimensions.get("window");
 

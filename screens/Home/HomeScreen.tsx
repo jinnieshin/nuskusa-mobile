@@ -1,8 +1,11 @@
-import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, Dimensions } from "react-native";
+import { View, Text } from "../../components/Themed";
 import React from "react";
 import Banner from "../../components/Banner";
 import { useEffect, useState } from "react";
-import BoardPreviewTab from "../../components/Home/BoardPreviewTab";
+import BoardPreviewTab from "../../components/Home/BoardPreview/BoardPreviewTab";
+import MarketItemList from "../../components/Home/MarketPreview/MarketItemList";
+import JobsItemList from "../../components/Home/JobsPreview/JobsItemList";
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   useEffect(() => {}, []);
@@ -14,9 +17,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         iconLeft="menu"
         iconRight="ios-notifications-outline"
       />
-      <View
+      <ScrollView
         style={styles.container}
-        // contentContainerStyle={{ alignItems: "center" }}
+        contentContainerStyle={{ alignItems: "center", paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.announcementContainer}>
           <Text style={styles.announcementLabel}>공지</Text>
@@ -25,9 +29,17 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
           </Text>
         </View>
         <View style={styles.boardPreviewContainer}>
-          <BoardPreviewTab />
+          <BoardPreviewTab navigation={navigation} />
         </View>
-      </View>
+        <View style={styles.boardPreviewContainer}>
+          <Text style={styles.title}>벼룩시장</Text>
+          <MarketItemList navigation={navigation} />
+        </View>
+
+        <View>
+          <JobsItemList navigation={navigation} />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -39,7 +51,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     marginTop: 21,
-    alignItems: "center",
+    // alignItems: "center",
   },
   announcementContainer: {
     marginTop: 20,
@@ -60,5 +72,11 @@ const styles = StyleSheet.create({
   },
   boardPreviewContainer: {
     marginTop: 30,
+  },
+  title: {
+    fontWeight: "700",
+    fontSize: 16,
+    marginBottom: 10,
+    marginLeft: 10,
   },
 });

@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View } from "../../../components/Themed";
 import React, { useEffect, useState } from "react";
 import Banner from "../../../components/Banner";
 import PostProfileBanner from "../../../components/Board/Post/PostProfileBanner";
@@ -35,7 +36,7 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Banner
         navigation={navigation}
         iconLeft="arrow-back"
@@ -44,6 +45,7 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
       <ScrollView style={styles.container}>
         <PostProfileBanner name={currentPost?.author?.name} />
         <PostContent
+          postId={postId}
           title={currentPost?.title}
           content={currentPost?.content}
         />

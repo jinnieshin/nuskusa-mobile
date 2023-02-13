@@ -22,7 +22,7 @@ type Props = {
 const BoardPreviewList = ({ navigation, boardType }: Props) => {
   const [board, setBoard] = useState({});
   const [permission, setPermission] = useState({});
-  const [postArr, setPostArray] = useState<PostSummary[]>([]);
+  const [postArr, setPostArray] = useState<any>([]);
 
   useEffect(() => {
     fetchBoard().catch(console.error);
@@ -67,7 +67,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
       const postArray = [];
       for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
-        const postObject: PostSummary = {
+        const postObject: any = {
           id: post.id,
           title: post.title,
           content: post.content,
@@ -94,7 +94,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
     }
   };
 
-  const fetchPostUpVote = async (post: PostSummary) => {
+  const fetchPostUpVote = async (post: any) => {
     const url = REACT_APP_HOST + "/api/post/getPosts/" + post.id;
     const response = await fetch(url, {
       method: "GET",
@@ -122,7 +122,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
           )}
           showsVerticalScrollIndicator={false}
         /> */}
-          {postArr.map((item) => (
+          {postArr.map((item: any) => (
             <PostPreviewItem
               post={item}
               content={item.title}

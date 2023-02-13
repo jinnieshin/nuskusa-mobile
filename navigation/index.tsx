@@ -43,6 +43,7 @@ import PostList from "../screens/Home/Board/PostList";
 import GeneralBoard from "../screens/Home/Board/GeneralBoard";
 import Announcement from "../screens/Home/Board/Announcement";
 import PostScreen from "../screens/Home/Board/PostScreen";
+import AddPostScreen from "../screens/Home/Board/AddPostScreen";
 
 import { useSelector } from "react-redux";
 import EditProfileScreen from "../screens/Home/Profile/EditProfileScreen";
@@ -193,6 +194,13 @@ const Board = () => {
       <BoardStack.Screen
         name="PostScreen"
         component={PostScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <BoardStack.Screen
+        name="AddPostScreen"
+        component={AddPostScreen}
         options={{
           headerShown: false,
         }}

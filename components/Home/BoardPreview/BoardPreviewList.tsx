@@ -126,7 +126,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
             <PostPreviewItem
               post={item}
               content={item.title}
-              time={1}
+              time={item.createdAt}
               upvoteCount={1}
             />
           ))}

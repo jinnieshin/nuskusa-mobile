@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 
 type commentObject = {
   id: number;
@@ -103,6 +104,15 @@ const Replies = ({
           </TouchableOpacity>
         )} */}
       </View>
+      <TouchableOpacity
+        style={{ flex: 0.08, height: 20, alignItems: "center" }}
+      >
+        {upvoted ? (
+          <FontAwesome name="heart" size={13} color="#DD0000" />
+        ) : (
+          <Feather name="heart" size={13} color="black" />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -131,7 +141,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginTop: 2,
-    flex: 0.83,
+    flex: 0.75,
     justifyContent: "space-between",
   },
   name: {

@@ -48,6 +48,9 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
           postId={postId}
           title={currentPost?.title}
           content={currentPost?.content}
+          upvoteCount={currentPost.upvoteCount}
+          upvoted={currentPost.upvoted}
+          commentCount={currentPost.commentCount}
         />
       </ScrollView>
     </View>

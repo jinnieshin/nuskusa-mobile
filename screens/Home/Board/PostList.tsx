@@ -22,7 +22,7 @@ import { REACT_APP_HOST } from "@env";
 
 const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   // const boardType = "freshmen";
-  const [postArr, setPostArray] = useState<PostSummary[]>([]);
+  const [postArr, setPostArray] = useState<any>([]);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const { boardType } = route.params;
 
@@ -36,6 +36,9 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
     (state: any) => state.showBoardDropDownList.value
   );
 
+  const navigateAddPost = () => {
+    navigation.navigate("AddPostScreen");
+  };
   const boardTypeToKorean = {
     announcement: "공지사항",
     freshmen: "신입생 게시판",
@@ -57,9 +60,11 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
     if (response.status == 200) {
       const posts = await response.json();
       const postArray = [];
+      console.log("dddddddddddd", posts[0]);
       for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
-        const postObject: PostSummary = {
+
+        const postObject = {
           id: post.id,
           title: post.title,
           content: post.content,
@@ -68,8 +73,9 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
           isAnonymous: post.isAnonymous,
           isPinned: post.isPinned,
           isEvent: post.isEvent,
-          lastModified: new Date(post.updatedAt),
+          lastModified: new Date(post.createdAt),
           author: post.author,
+          // profileImage: post.profileImage,
           // upvoteCount: post.upvoteCount,
         };
         postObject.lastModified.setHours(
@@ -79,6 +85,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
         postArray.push(post);
       }
       setPostArray(postArray);
+      console.log(postArr[2]);
     }
   };
 
@@ -115,21 +122,31 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
               />
             </View>
           </TouchableWithoutFeedback>
-          <Feather name="edit" size={24} color="black" />
+          <TouchableOpacity onPress={navigateAddPost}>
+            <Feather name="edit" size={24} color="black" />
+          </TouchableOpacity>
         </View>
         <Pinned />
         <View style={{ height: height - 300 }}>
           <FlatList
             data={postArr}
-            renderItem={({ item }) => (
-              <PostThumbnail
-                navigation={navigation}
-                id={item.id}
-                content={item.content}
-                name={item.author}
-                title={item.title}
-              />
-            )}
+            renderItem={({ item }) =>
+              !item.isHidden ? (
+                <PostThumbnail
+                  navigation={navigation}
+                  id={item.id}
+                  content={item.content}
+                  name={item.author}
+                  title={item.title}
+                  isPinned={item.isPinned}
+                  lastModified={item.updatedAt}
+                  // profileImage={item?.profileImageUrl}
+                />
+              ) : (
+                <></>
+              )
+            }
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>

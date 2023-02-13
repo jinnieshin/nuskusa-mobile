@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import RenderHTML from "react-native-render-html";
-import { FontAwesome5, Feather } from "@expo/vector-icons";
+import { FontAwesome5, Feather, FontAwesome } from "@expo/vector-icons";
 import Comments from "./Comments";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
@@ -10,12 +10,20 @@ const PostContent = ({
   postId,
   title,
   content,
+  upvoteCount,
+  upvoted,
+  commentCount,
 }: {
   postId: number;
   title: string;
   content: string;
+  upvoteCount: number;
+  upvoted: boolean;
+  commentCount: number;
 }) => {
   const [commentArr, setCommentArr] = useState<any>([]);
+
+  console.log(content);
 
   const source = {
     html: content,
@@ -69,12 +77,16 @@ const PostContent = ({
         />
       </View>
       <View style={styles.contentCommentDivider}>
-        <FontAwesome5 name="comment" size={22} color="black" />
-        <Text style={styles.counts}> 3</Text>
-        <Feather name="heart" size={23} color="black" />
-        <Text style={styles.counts}> 4</Text>
+        <FontAwesome5 name="comment" size={20} color="black" />
+        <Text style={styles.counts}> {commentCount}</Text>
+        {upvoted ? (
+          <FontAwesome name="heart" size={20} color="#DD0000" />
+        ) : (
+          <Feather name="heart" size={20} color="black" />
+        )}
+        <Text style={styles.counts}> {upvoteCount}</Text>
       </View>
-      <View>
+      <View style={{ minHeight: 100 }}>
         {commentArr.map((item: any) => {
           return (
             <Comments
@@ -84,7 +96,7 @@ const PostContent = ({
               upvoteCount={item.upvoteCount}
               upvoted={item.upvoted}
               postId={item.post}
-              lastModified={new Date(item.updatedAt)}
+              lastModified={new Date(item.createdAt)}
               // replyTo={item.replyTo}
               isMine={item.isMine}
               profileImage={item.author.profileImageUrl}
@@ -113,6 +125,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 3,
+    minHeight: 270,
   },
   title: {
     fontSize: 20,

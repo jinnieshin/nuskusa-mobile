@@ -12,6 +12,7 @@ import Replies from "./Replies";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
 import * as Animatable from "react-native-animatable";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 
 type commentObject = {
   id: number;
@@ -75,7 +76,10 @@ const Comments = ({
       <View style={styles.contentContainer}>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.name}>{author}</Text>
-          <Text style={{ fontSize: 9 }}>{"    "}25분 전</Text>
+          <Text style={{ fontSize: 9 }}>
+            {"    "}
+            25분 전
+          </Text>
         </View>
         <Text style={styles.content}>{content}</Text>
 
@@ -107,7 +111,7 @@ const Comments = ({
           </TouchableOpacity>
         ) : (
           repliesArr.length > 0 && (
-            <Animatable.View animation="slideInLeft">
+            <Animatable.View>
               {repliesArr.map((reply: any) => {
                 return (
                   <Replies
@@ -144,6 +148,15 @@ const Comments = ({
           )
         )}
       </View>
+      <TouchableOpacity
+        style={{ flex: 0.08, height: 20, alignItems: "center" }}
+      >
+        {upvoted ? (
+          <FontAwesome name="heart" size={13} color="#DD0000" />
+        ) : (
+          <Feather name="heart" size={13} color="black" />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -156,7 +169,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     width: width * 0.9,
-    // borderWidth: 1,
     flexDirection: "row",
     padding: 10,
   },
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginTop: 2,
-    flex: 0.87,
+    flex: 0.79,
     justifyContent: "space-between",
   },
   name: {

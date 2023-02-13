@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import BoardPreviewList from "./BoardPreviewList";
 
 const BoardPreviewTab = ({ navigation }: { navigation: any }) => {
-  const [tab, setTab] = useState<string>("Hot");
+  const [tab, setTab] = useState<string>("general");
 
   const handleHotPress = () => {
     setTab("Hot");

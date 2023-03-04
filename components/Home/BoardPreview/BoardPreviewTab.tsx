@@ -85,7 +85,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     width: width * 0.9,
-    height: 270,
+    height: 290,
     backgroundColor: "#F3F4F6",
   },
   tabsContainer: {

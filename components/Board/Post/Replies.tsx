@@ -6,11 +6,15 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import PostReplies from "./PostReplies";
+import { useDispatch, useSelector } from "react-redux";
 import { Feather, FontAwesome } from "@expo/vector-icons";
+import { setCommentContent } from "../../../redux/features/commentContent";
 
 type commentObject = {
   id: number;
@@ -21,6 +25,7 @@ type commentObject = {
   upvoted: boolean;
   isMine: boolean;
   postId: number;
+  replyTo: number;
   profileImage: string;
 };
 
@@ -31,88 +36,98 @@ const Replies = ({
   upvoteCount,
   lastModified,
   isMine,
+  replyTo,
   upvoted,
   postId,
   profileImage,
 }: commentObject) => {
-  const [repliesArr, setRepliesArr] = useState<any>([]);
-  const [refresh, setRefresh] = useState<boolean>(false);
-  const [showReplies, setShowReplies] = useState<boolean>(false);
+  const [writeReplies, setWriteReplies] = useState<boolean>(false);
 
-  // const fetchReplies = async () => {
-  //   const url = REACT_APP_HOST + "/api/post/getComments/" + id;
-  //   const response = await fetch(url, {
-  //     method: "GET",
-  //   });
-  //   console.log(url);
-  //   console.log(response.status);
-  //   if (response.status == 200) {
-  //     const repliesArr = await response.json();
-  //     console.log(repliesArr);
-  //     setRepliesArr(repliesArr);
-  //   }
-  // };
+  const openReplies = () => {
+    setWriteReplies(true);
+  };
 
-  // const handleLoadReplies = () => {
-  //   setShowReplies(!showReplies);
-  // };
+  const cancelReply = () => {
+    setWriteReplies(false);
+  };
 
-  // useEffect(() => {
-  //   fetchReplies().catch(console.error);
-  // }, [refresh]);
+  const comment = useSelector((state: any) => state.commentContent.value);
+  const dispatch = useDispatch();
 
+  const addReply = async () => {
+    if (comment == "") {
+      Alert.alert("댓글 내용을 작성해주세요.");
+      return;
+    }
+    const url = REACT_APP_HOST + "/api/post/addComment/" + postId;
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        content: comment,
+        replyTo: replyTo,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status == 201) {
+      setWriteReplies(false);
+      dispatch(setCommentContent(""));
+    } else {
+      Alert.alert(
+        "댓글 작성에 실패했습니다. 오류가 계속되면 한인회 IT팀에게 문의해주세요."
+      );
+    }
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        {profileImage == "" ? (
-          <View style={styles.image} />
-        ) : (
-          <Image style={styles.image} source={{ uri: profileImage }}></Image>
-        )}
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.name}>{author}</Text>
-          <Text style={{ fontSize: 9 }}>{"    "}25분 전</Text>
+    <View>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          {profileImage == "" ? (
+            <View style={styles.image} />
+          ) : (
+            <Image style={styles.image} source={{ uri: profileImage }}></Image>
+          )}
         </View>
-        <Text style={styles.content}>{content}</Text>
+        <View style={styles.contentContainer}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.name}>{author}</Text>
+            <Text style={{ fontSize: 9 }}>{"    "}25분 전</Text>
+          </View>
+          <Text style={styles.content}>{content}</Text>
 
-        <View style={styles.buttonsContainer}>
-          <Text style={[styles.buttons, { marginRight: 20 }]}>
-            좋아요 {upvoteCount}개
-          </Text>
-          <TouchableOpacity>
-            <Text style={styles.buttons}>답글 쓰기</Text>
-          </TouchableOpacity>
-        </View>
-        {/* If there exist replies to the comment, have a button to load them
-        {repliesArr.length > 0 && (
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 13,
-            }}
-          >
-            <View
-              style={{ width: 20, height: 1, backgroundColor: "#808080" }}
-            />
-            <Text style={styles.replyButton}>
-              {"  "}
-              답글 {repliesArr.length}개 더 보기
+          <View style={styles.buttonsContainer}>
+            <Text style={[styles.buttons, { marginRight: 20 }]}>
+              좋아요 {upvoteCount}개
             </Text>
-          </TouchableOpacity>
-        )} */}
+            <TouchableOpacity onPress={openReplies}>
+              <Text style={styles.buttons}>답글 쓰기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={{ flex: 0.08, height: 20, alignItems: "center" }}
+        >
+          {upvoted ? (
+            <FontAwesome name="heart" size={13} color="#DD0000" />
+          ) : (
+            <Feather name="heart" size={13} color="black" />
+          )}
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={{ flex: 0.08, height: 20, alignItems: "center" }}
-      >
-        {upvoted ? (
-          <FontAwesome name="heart" size={13} color="#DD0000" />
-        ) : (
-          <Feather name="heart" size={13} color="black" />
-        )}
-      </TouchableOpacity>
+      {writeReplies && (
+        <View>
+          <PostReplies postId={postId} commentId={id} />
+          <View style={styles.postButtonsContainer}>
+            <TouchableOpacity onPress={cancelReply}>
+              <Text style={styles.cancelButton}>취소</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={addReply}>
+              <Text style={styles.postButton}>게시</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -163,5 +178,21 @@ const styles = StyleSheet.create({
   replyButton: {
     fontSize: 12,
     color: "#808080",
+  },
+  postButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  cancelButton: {
+    fontSize: 13,
+    color: "#bfbfbf",
+    margin: 10,
+    marginRight: 20,
+  },
+  postButton: {
+    fontSize: 13,
+    color: "#BCA06D",
+    margin: 10,
+    fontWeight: "600",
   },
 });

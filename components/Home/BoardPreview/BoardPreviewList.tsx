@@ -85,8 +85,8 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
         );
         // postArray.push(postObject);
         postArray.push(post);
-        if (postArray.length == 8) {
-          // Maintain the number of preview posts to the most recent 7 posts
+        if (postArray.length == 6) {
+          // Maintain the number of preview posts to the most recent 5 posts
           postArray.shift;
         }
       }
@@ -147,7 +147,7 @@ export default BoardPreviewList;
 const styles = StyleSheet.create({
   itemsContainer: {
     alignItems: "center",
-    height: 193,
+    height: 213,
   },
   viewAllContainer: {
     justifyContent: "center",

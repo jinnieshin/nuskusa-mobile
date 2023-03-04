@@ -1,10 +1,20 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import RenderHTML from "react-native-render-html";
 import { FontAwesome5, Feather, FontAwesome } from "@expo/vector-icons";
 import Comments from "./Comments";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import PostComment from "./PostComment";
+import { setOpenCommentInput } from "../../../redux/features/openCommentInput";
+import { useDispatch, useSelector } from "react-redux";
 
 const PostContent = ({
   postId,
@@ -22,7 +32,11 @@ const PostContent = ({
   commentCount: number;
 }) => {
   const [commentArr, setCommentArr] = useState<any>([]);
+  // const [openComment, setOpenComment] = useState<boolean>(false);
 
+  const openComment = useSelector((state: any) => state.openCommentInput.value);
+
+  const dispatch = useDispatch();
   console.log(content);
 
   const source = {
@@ -41,6 +55,11 @@ const PostContent = ({
     img: {
       enableExperimentalPercentWidth: true,
     },
+  };
+
+  const handleCommentPress = () => {
+    // setOpenComment(!openComment);
+    dispatch(setOpenCommentInput(true));
   };
 
   const fetchComments = async () => {
@@ -77,8 +96,11 @@ const PostContent = ({
         />
       </View>
       <View style={styles.contentCommentDivider}>
-        <FontAwesome5 name="comment" size={20} color="black" />
+        <TouchableOpacity onPress={handleCommentPress}>
+          <FontAwesome5 name="comment" size={20} color="black" />
+        </TouchableOpacity>
         <Text style={styles.counts}> {commentCount}</Text>
+
         {upvoted ? (
           <FontAwesome name="heart" size={20} color="#DD0000" />
         ) : (
@@ -87,6 +109,7 @@ const PostContent = ({
         <Text style={styles.counts}> {upvoteCount}</Text>
       </View>
       <View style={{ minHeight: 100 }}>
+        {openComment && <PostComment postId={postId} commentId={null} />}
         {commentArr.map((item: any) => {
           return (
             <Comments

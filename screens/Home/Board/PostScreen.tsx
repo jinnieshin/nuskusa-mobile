@@ -6,10 +6,15 @@ import PostProfileBanner from "../../../components/Board/Post/PostProfileBanner"
 import PostContent from "../../../components/Board/Post/PostContent";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import { useSelector } from "react-redux";
 
 const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
   const postId = route.params.postId;
   const [currentPost, setPost] = useState<any>({});
+
+  const currentBoardPage: string = useSelector(
+    (state: any) => state.currentBoardPage.value
+  );
 
   console.log(postId);
   useEffect(() => {
@@ -29,7 +34,7 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     if (response.status == 200) {
       const post = await response.json();
       post.lastModified = new Date(post.updatedAt);
-      post.lastModified.setHours(post.lastModified.getHours() - 8);
+      post.lastModified.setHours(post.lastModified.getHours());
       console.log("Success");
       setPost(post);
     }
@@ -43,7 +48,11 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
         iconRight="ios-notifications-outline"
       />
       <ScrollView style={styles.container}>
-        <PostProfileBanner name={currentPost?.author?.name} />
+        <PostProfileBanner
+          name={currentPost?.author?.name}
+          boardType={currentBoardPage}
+          lastModified={currentPost.lastModified}
+        />
         <PostContent
           postId={postId}
           title={currentPost?.title}

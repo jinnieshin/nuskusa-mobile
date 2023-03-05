@@ -26,35 +26,11 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
     (state: any) => state.currentBoardPage.value
   );
 
+  const userdata: string = useSelector((state: any) => state.user.value);
+
   const [image, setImage] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-
-  // function uploadImage() {
-  //   return this.loader.file.then((file) => {
-  //     return new Promise(async (resolve, reject) => {
-  //       const formData = new FormData()
-  //       formData.append('file', file)
-  //       const url = REACT_APP_HOST + "/api/post/uploadPostAttachment/" + file.name
-  //       const response = await fetch(url, {
-  //         method: "POST",
-  //         body: formData,
-  //       })
-
-  //       if (response.status == 200) {
-  //         const json = await response.json()
-  //         resolve({
-  //           urls: {
-  //             default: json.url,
-  //           },
-  //         });
-  //       }
-  //       else {
-  //         reject("An error has occurred");
-  //       }
-  //     });
-  //   });
-  // }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -73,7 +49,26 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
     }
   };
 
+  // TODO: upload image only --> upload various file types
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append("file", image);
+    //@ts-ignore
+    const ref = userdata.email + "(" + userdata.name + ")_" + image;
+    const url = REACT_APP_HOST + "/api/post/uploadPostAttachment/" + ref;
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+    if (response.status !== 200) {
+      Alert.alert("파일 업로드에 실패했습니다. " + response.body);
+    }
+  };
+
   const addPost = async () => {
+    if (image) {
+      await uploadImage();
+    }
     const url = REACT_APP_HOST + "/api/post/addPost/" + currentBoardPage;
     // if (image) {
     //   setContent(

@@ -44,6 +44,7 @@ import GeneralBoard from "../screens/Home/Board/GeneralBoard";
 import Announcement from "../screens/Home/Board/Announcement";
 import PostScreen from "../screens/Home/Board/PostScreen";
 import AddPostScreen from "../screens/Home/Board/AddPostScreen";
+import NotificationDrawerScreen from "../screens/Home/Notification/NotificationDrawerScreen";
 
 import { useSelector } from "react-redux";
 import EditProfileScreen from "../screens/Home/Profile/EditProfileScreen";
@@ -128,13 +129,16 @@ function RootNavigator({ user }: { user: any }) {
         </Stack.Group>
       </Stack.Navigator>
     ) : (
-      <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
-        <Drawer.Screen
-          name="main"
-          component={Main}
+      <MainDrawer.Navigator
+        id="LeftDrawer"
+        drawerContent={(props) => <DrawerContent {...props} />}
+      >
+        <MainDrawer.Screen
+          name="Notification"
+          component={NotificationDrawer}
           options={{ headerShown: false }}
         />
-      </Drawer.Navigator>
+      </MainDrawer.Navigator>
     )
   );
 }
@@ -265,35 +269,25 @@ function BottomTabNavigator() {
   );
 }
 
-const Drawer = createDrawerNavigator();
+const MainDrawer = createDrawerNavigator();
 
-function DrawerNavigator() {
+const RightDrawer = createDrawerNavigator();
+
+const NotificationDrawer = () => {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen
-        name="Main"
-        component={BottomTabNavigator}
-        options={{
-          drawerLabel: "Home",
-        }}
+    <RightDrawer.Navigator
+      id="RightDrawer"
+      screenOptions={{ drawerPosition: "right", headerShown: false }}
+      drawerContent={(props) => <NotificationDrawerScreen {...props} />}
+    >
+      <MainDrawer.Screen
+        name="main"
+        component={Main}
+        options={{ headerShown: false }}
       />
-      {/* <Drawer.Screen
-      //   name="BoardScreen"
-      //   component={BoardScreen}
-      //   options={{
-      //     drawerLabel: "Board",
-      //   }}
-      // />
-      // <Drawer.Screen
-      //   name="ProfileScreen"
-      //   component={ProfileScreen}
-      //   options={{
-      //     drawerLabel: "Home",
-      //   }}
-      // /> */}
-    </Drawer.Navigator>
+    </RightDrawer.Navigator>
   );
-}
+};
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/

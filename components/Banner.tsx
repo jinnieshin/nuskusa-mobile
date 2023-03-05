@@ -18,11 +18,11 @@ const Banner = ({
   };
 
   const handleMenu = () => {
-    navigation.toggleDrawer();
+    navigation.getParent("LeftDrawer").toggleDrawer();
   };
 
   const handleNotification = () => {
-    console.log("Handle noti");
+    navigation.getParent("RightDrawer").toggleDrawer();
   };
   return (
     <SafeAreaView style={{ backgroundColor: "black", height: 44 }}>

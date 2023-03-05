@@ -19,6 +19,8 @@ import PostComment from "./PostComment";
 import { useSelector, useDispatch } from "react-redux";
 import PostReplies from "./PostReplies";
 import { setCommentContent } from "../../../redux/features/commentContent";
+import * as Haptics from "expo-haptics";
+import { setRefresh } from "../../../redux/features/refresher";
 
 type commentObject = {
   id: number;
@@ -44,11 +46,12 @@ const Comments = ({
   profileImage,
 }: commentObject) => {
   const [repliesArr, setRepliesArr] = useState<any>([]);
-  const [refresh, setRefresh] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
   const [writeReplies, setWriteReplies] = useState<boolean>(false);
+
+  const refresh: string = useSelector((state: any) => state.refresh.value);
 
   const openReplies = () => {
     setWriteReplies(true);
@@ -60,6 +63,21 @@ const Comments = ({
 
   const comment = useSelector((state: any) => state.commentContent.value);
   const dispatch = useDispatch();
+
+  const upvoteComment = async () => {
+    const url = REACT_APP_HOST + "/api/post/pushCommentUpvote/" + id;
+    const response = await fetch(url, {
+      method: "POST",
+    });
+
+    if (response.status == 200) {
+      const json = await response.json();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      dispatch(setRefresh());
+    } else {
+      Alert.alert("좋아요 처리에 실패했습니다.");
+    }
+  };
 
   const addReply = async () => {
     if (comment == "") {
@@ -92,11 +110,8 @@ const Comments = ({
     const response = await fetch(url, {
       method: "GET",
     });
-    console.log(url);
-    console.log(response.status);
     if (response.status == 200) {
       const repliesArr = await response.json();
-      console.log(repliesArr);
       setRepliesArr(repliesArr);
     }
   };
@@ -213,6 +228,7 @@ const Comments = ({
       </View>
       <TouchableOpacity
         style={{ flex: 0.08, height: 20, alignItems: "center" }}
+        onPress={upvoteComment}
       >
         {upvoted ? (
           <FontAwesome name="heart" size={13} color="#DD0000" />

@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Vibration,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import RenderHTML from "react-native-render-html";
@@ -15,6 +16,8 @@ import { REACT_APP_HOST } from "@env";
 import PostComment from "./PostComment";
 import { setOpenCommentInput } from "../../../redux/features/openCommentInput";
 import { useDispatch, useSelector } from "react-redux";
+import { setRefresh } from "../../../redux/features/refresher";
+import * as Haptics from "expo-haptics";
 
 const PostContent = ({
   postId,
@@ -39,6 +42,20 @@ const PostContent = ({
   const dispatch = useDispatch();
   console.log(content);
 
+  const upvotePost = async () => {
+    const url =
+      process.env.REACT_APP_HOST + "/api/post/pushPostUpvote/" + postId;
+    const response = await fetch(url, {
+      method: "POST",
+    });
+
+    if (response.status == 200) {
+      const json = await response.json();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      dispatch(setRefresh());
+    }
+  };
+
   const source = {
     html: content,
   };
@@ -56,6 +73,7 @@ const PostContent = ({
       enableExperimentalPercentWidth: true,
     },
   };
+  const refresh: string = useSelector((state: any) => state.refresh.value);
 
   const handleCommentPress = () => {
     // setOpenComment(!openComment);
@@ -78,8 +96,7 @@ const PostContent = ({
 
   useEffect(() => {
     fetchComments().catch(console.error);
-    console.log("slfjasldkfjaslk", commentArr.length);
-  }, [postId]);
+  }, [postId, refresh]);
 
   return (
     <View style={styles.container}>
@@ -101,12 +118,14 @@ const PostContent = ({
         </TouchableOpacity>
         <Text style={styles.counts}> {commentCount}</Text>
 
-        {upvoted ? (
-          <FontAwesome name="heart" size={20} color="#DD0000" />
-        ) : (
-          <Feather name="heart" size={20} color="black" />
-        )}
-        <Text style={styles.counts}> {upvoteCount}</Text>
+        <TouchableOpacity onPress={upvotePost} style={{ flexDirection: "row" }}>
+          {upvoted ? (
+            <FontAwesome name="heart" size={20} color="#DD0000" />
+          ) : (
+            <Feather name="heart" size={20} color="black" />
+          )}
+          <Text style={styles.counts}> {upvoteCount}</Text>
+        </TouchableOpacity>
       </View>
       <View style={{ minHeight: 100 }}>
         {openComment && <PostComment postId={postId} commentId={null} />}

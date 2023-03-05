@@ -16,11 +16,11 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     (state: any) => state.currentBoardPage.value
   );
 
-  console.log(postId);
+  const refresh: string = useSelector((state: any) => state.refresh.value);
+
   useEffect(() => {
     fetchPost();
-    console.log(currentPost);
-  }, []);
+  }, [refresh]);
 
   console.log(REACT_APP_HOST);
   const fetchPost = async () => {
@@ -55,8 +55,8 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
         />
         <PostContent
           postId={postId}
-          title={currentPost?.title}
-          content={currentPost?.content}
+          title={currentPost.title}
+          content={currentPost.content}
           upvoteCount={currentPost.upvoteCount}
           upvoted={currentPost.upvoted}
           commentCount={currentPost.commentCount}

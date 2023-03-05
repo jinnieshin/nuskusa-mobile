@@ -15,6 +15,8 @@ import PostReplies from "./PostReplies";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { setCommentContent } from "../../../redux/features/commentContent";
+import * as Haptics from "expo-haptics";
+import { setRefresh } from "../../../redux/features/refresher";
 
 type commentObject = {
   id: number;
@@ -53,6 +55,21 @@ const Replies = ({
 
   const comment = useSelector((state: any) => state.commentContent.value);
   const dispatch = useDispatch();
+
+  const upvoteComment = async () => {
+    const url = REACT_APP_HOST + "/api/post/pushCommentUpvote/" + id;
+    const response = await fetch(url, {
+      method: "POST",
+    });
+
+    if (response.status == 200) {
+      const json = await response.json();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      dispatch(setRefresh());
+    } else {
+      Alert.alert("좋아요 처리에 실패했습니다.");
+    }
+  };
 
   const addReply = async () => {
     if (comment == "") {
@@ -107,6 +124,7 @@ const Replies = ({
         </View>
         <TouchableOpacity
           style={{ flex: 0.08, height: 20, alignItems: "center" }}
+          onPress={upvoteComment}
         >
           {upvoted ? (
             <FontAwesome name="heart" size={13} color="#DD0000" />

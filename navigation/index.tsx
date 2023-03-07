@@ -16,6 +16,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { useState } from "react";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -46,17 +47,39 @@ import PostScreen from "../screens/Home/Board/PostScreen";
 import AddPostScreen from "../screens/Home/Board/AddPostScreen";
 import NotificationDrawerScreen from "../screens/Home/Notification/NotificationDrawerScreen";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EditProfileScreen from "../screens/Home/Profile/EditProfileScreen";
 import DrawerContent from "../components/Drawer/DrawerContent";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUser } from "../redux/features/user";
 
 export default function Navigation({
   colorScheme,
 }: {
   colorScheme: ColorSchemeName;
 }) {
-  const user = useSelector((state: any) => state.user.value);
-  console.log(user);
+  const dispatch = useDispatch();
+  // from async storage (user chooses to keep logged in)
+
+  const [userObject, setUserObject] = useState<any>({});
+  React.useEffect(() => {
+    getUserObject();
+  }, []);
+
+  const getUserObject = async () => {
+    const userFromAsyncStorage = await AsyncStorage.getItem("userObject");
+    if (userFromAsyncStorage !== null) {
+      setUserObject(JSON.parse(userFromAsyncStorage));
+      dispatch(setUser(JSON.parse(userFromAsyncStorage)));
+    }
+  };
+
+  const user = useSelector((state: any) => state.user.value); // from redux
+
+  console.log("REDUX: ", user);
+  console.log("From AsyncStorage: ", userObject);
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -74,10 +97,11 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator({ user }: { user: any }) {
+  console.log("EEEEEE", user.email);
   return (
     // initialRouteName={user.email == "" ? "LoginScreen" : "Main"}
 
-    user.email == "" ? (
+    user.email === "" ? (
       <Stack.Navigator>
         <Stack.Group>
           <Stack.Screen

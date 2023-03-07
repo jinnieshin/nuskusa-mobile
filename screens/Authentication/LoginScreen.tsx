@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../redux/features/user";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
   const {
@@ -32,6 +33,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 
   const [saveEmail, setSaveEmail] = useState<boolean>(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const email: string = watch("Email");
@@ -39,7 +41,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
   const user = useSelector((state: any) => state.user.value);
 
   const handleLogin = async (event: any) => {
-    // event.preventDefault();
     setLoading(true);
     const url = REACT_APP_HOST + "/api/auth/signin";
     const credentialObject = {
@@ -60,6 +61,11 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         setLoading(false);
         const userdata = await response.json();
         dispatch(setUser(userdata));
+        if (keepLoggedIn) {
+          // If user chooses to keep logged in:
+          await AsyncStorage.setItem("userObject", JSON.stringify(userdata));
+          console.log("SAVED");
+        }
       }
     } catch (error) {
       Alert.alert(error.message);

@@ -14,6 +14,7 @@ import { REACT_APP_HOST } from "@env";
 export default function ProfileScreen({ navigation }: { navigation: any }) {
   const userdata = useSelector((state: any) => state.user.value);
   const dispatch = useDispatch();
+  console.log("USERDATA: ", userdata);
 
   const initialState = {
     name: "",

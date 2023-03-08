@@ -5,6 +5,7 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,6 +24,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
   const [board, setBoard] = useState({});
   const [permission, setPermission] = useState({});
   const [postArr, setPostArray] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchBoard().catch(console.error);
@@ -37,6 +39,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
   };
 
   const fetchBoard = async () => {
+    setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getBoard/" + boardType;
     const response = await fetch(url, {
       method: "GET",
@@ -54,10 +57,12 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
       };
       setBoard(boardObject);
       setPermission(permission);
+      setLoading(false);
     }
   };
 
   const fetchPosts = async () => {
+    setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getPosts/" + boardType;
     const response = await fetch(url, {
       method: "GET",
@@ -90,7 +95,9 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
           postArray.shift;
         }
       }
+
       setPostArray(postArray);
+      setLoading(false);
     }
   };
 
@@ -122,14 +129,18 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
           )}
           showsVerticalScrollIndicator={false}
         /> */}
-          {postArr.map((item: any) => (
-            <PostPreviewItem
-              post={item}
-              content={item.title}
-              time={item.createdAt}
-              upvoteCount={1}
-            />
-          ))}
+          {loading ? (
+            <ActivityIndicator style={{ marginTop: 20 }} />
+          ) : (
+            postArr.map((item: any) => (
+              <PostPreviewItem
+                post={item}
+                content={item.title}
+                time={item.createdAt}
+                upvoteCount={1}
+              />
+            ))
+          )}
         </View>
         <TouchableOpacity
           style={styles.viewAllContainer}

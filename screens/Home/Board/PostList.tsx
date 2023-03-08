@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { View, Text } from "../../../components/Themed";
 import React, { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   // const boardType = "freshmen";
   const [postArr, setPostArray] = useState<any>([]);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { boardType } = route.params;
 
   const dispatch = useDispatch();
@@ -53,6 +55,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   }, [currentBoardPage]);
 
   const fetchPosts = async () => {
+    setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getPosts/" + currentBoardPage;
     const response = await fetch(url, {
       method: "GET",
@@ -60,7 +63,6 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
     if (response.status == 200) {
       const posts = await response.json();
       const postArray = [];
-      console.log("dddddddddddd", posts[0]);
       for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
 
@@ -85,7 +87,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
         postArray.push(post);
       }
       setPostArray(postArray);
-      console.log(postArr[2]);
+      setLoading(false);
     }
   };
 
@@ -128,26 +130,30 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
         </View>
         <Pinned />
         <View style={{ height: height - 300 }}>
-          <FlatList
-            data={postArr}
-            renderItem={({ item }) =>
-              !item.isHidden ? (
-                <PostThumbnail
-                  navigation={navigation}
-                  id={item.id}
-                  content={item.content}
-                  name={item.author}
-                  title={item.title}
-                  isPinned={item.isPinned}
-                  lastModified={item.updatedAt}
-                  // profileImage={item?.profileImageUrl}
-                />
-              ) : (
-                <></>
-              )
-            }
-            showsVerticalScrollIndicator={false}
-          />
+          {loading ? (
+            <ActivityIndicator style={{ marginTop: 5 }} />
+          ) : (
+            <FlatList
+              data={postArr}
+              renderItem={({ item }) =>
+                !item.isHidden ? (
+                  <PostThumbnail
+                    navigation={navigation}
+                    id={item.id}
+                    content={item.content}
+                    name={item.author}
+                    title={item.title}
+                    isPinned={item.isPinned}
+                    lastModified={item.updatedAt}
+                    // profileImage={item?.profileImageUrl}
+                  />
+                ) : (
+                  <></>
+                )
+              }
+              showsVerticalScrollIndicator={false}
+            />
+          )}
         </View>
       </View>
     </View>

@@ -14,7 +14,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { Alert, ColorSchemeName, Pressable } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useState } from "react";
 
@@ -53,6 +53,8 @@ import DrawerContent from "../components/Drawer/DrawerContent";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUser } from "../redux/features/user";
+//@ts-ignore
+import { REACT_APP_HOST } from "@env";
 
 export default function Navigation({
   colorScheme,
@@ -70,15 +72,35 @@ export default function Navigation({
   const getUserObject = async () => {
     const userFromAsyncStorage = await AsyncStorage.getItem("userObject");
     if (userFromAsyncStorage !== null) {
-      setUserObject(JSON.parse(userFromAsyncStorage));
-      dispatch(setUser(JSON.parse(userFromAsyncStorage)));
+      const userFromAsyncStorageObject = JSON.parse(userFromAsyncStorage);
+      setUserObject(userFromAsyncStorageObject);
+      dispatch(setUser(userFromAsyncStorageObject));
+
+      // Sign In
+      // If app reloads, user information exists, but user is actually not signed in
+      const userPasswordFromAsyncStorage = await AsyncStorage.getItem(
+        "userPassword"
+      );
+      const url = REACT_APP_HOST + "/api/auth/signin";
+
+      const credentialObject = {
+        email: userFromAsyncStorageObject.email,
+        password: userPasswordFromAsyncStorage,
+      };
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(credentialObject),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      // if (response.status !== 200) {
+      //   Alert.alert(response.status)
+      // }
     }
   };
 
   const user = useSelector((state: any) => state.user.value); // from redux
-
-  console.log("REDUX: ", user);
-  console.log("From AsyncStorage: ", userObject);
 
   return (
     <NavigationContainer
@@ -97,7 +119,6 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator({ user }: { user: any }) {
-  console.log("EEEEEE", user.email);
   return (
     // initialRouteName={user.email == "" ? "LoginScreen" : "Main"}
 

@@ -64,6 +64,10 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         if (keepLoggedIn) {
           // If user chooses to keep logged in:
           await AsyncStorage.setItem("userObject", JSON.stringify(userdata));
+          await AsyncStorage.setItem(
+            "userPassword",
+            sha512(password).toString()
+          );
           console.log("SAVED");
         }
       }

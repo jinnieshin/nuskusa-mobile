@@ -1,12 +1,11 @@
 import {
-  View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Platform,
   Dimensions,
 } from "react-native";
+import { View, Text } from "../../../components/Themed";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import StudentTypeButton from "../../../components/Authentication/StudentTypeButton";
@@ -79,6 +78,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+    flex: 1,
   },
   icon: {
     position: "absolute",

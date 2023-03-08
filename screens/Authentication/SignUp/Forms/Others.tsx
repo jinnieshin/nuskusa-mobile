@@ -81,6 +81,7 @@ function Others({ navigation }: { navigation: any }): JSX.Element {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ backgroundColor: "white", flex: 1 }}
     >
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         <TouchableOpacity
@@ -139,7 +140,7 @@ function Others({ navigation }: { navigation: any }): JSX.Element {
           />
         </View>
         {/* Blank space for better scrolling and finding the button at the bottom */}
-        <View style={{ height: 100 }}></View>
+        <View style={{ height: 100, backgroundColor: "white" }}></View>
       </ScrollView>
     </KeyboardAvoidingView>
   );

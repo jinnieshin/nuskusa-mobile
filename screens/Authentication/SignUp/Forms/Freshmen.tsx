@@ -160,6 +160,7 @@ function Freshmen({ navigation }: { navigation: any }): JSX.Element {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ backgroundColor: "white" }}
     >
       {/* TODO: design loading screen */}
       {loading ? (

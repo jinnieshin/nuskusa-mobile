@@ -30,6 +30,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import { Feather, Octicons, Ionicons } from "@expo/vector-icons";
 
+import StartScreen from "../screens/StartScreen";
 import LoginScreen from "../screens/Authentication/LoginScreen";
 import ResetPassword from "../screens/Authentication/ResetPassword";
 import SelectStuType from "../screens/Authentication/SignUp/SelectStuType";
@@ -125,6 +126,11 @@ function RootNavigator({ user }: { user: any }) {
     user.email === "" ? (
       <Stack.Navigator>
         <Stack.Group>
+          {/* <Stack.Screen
+            name="StartScreen"
+            component={StartScreen}
+            options={{ headerShown: false }}
+          /> */}
           <Stack.Screen
             name="LoginScreen"
             component={LoginScreen}

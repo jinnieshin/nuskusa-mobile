@@ -10,6 +10,7 @@ import Buttons from "../../../components/Profile/Buttons";
 import { setUser } from "../../../redux/features/user";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileScreen({ navigation }: { navigation: any }) {
   const userdata = useSelector((state: any) => state.user.value);
@@ -37,6 +38,8 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
       });
       if (response.status == 200) {
         dispatch(setUser(initialState));
+        await AsyncStorage.removeItem("userObject");
+        await AsyncStorage.removeItem("userPassword");
       } else {
         Alert.alert("로그아웃 중 오류가 발생했습니다: " + response.body);
       }

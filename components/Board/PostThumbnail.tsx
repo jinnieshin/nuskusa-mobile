@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { FontAwesome5, Octicons } from "@expo/vector-icons";
+import { FontAwesome5, Octicons, AntDesign } from "@expo/vector-icons";
 import RenderHtml from "react-native-render-html";
+import timeAgo from "../TimeAgo";
 
 type Props = {
   id: string;
@@ -16,12 +17,22 @@ type Props = {
   // time: number;
   title: string;
   content: string;
+  isPinned: boolean;
+  lastModified: any;
   // upvoteCount: number;
   // commentCount: number;
   // profileImage: string;
 };
 
-const PostThumbnail = ({ navigation, id, name, title, content }: Props) => {
+const PostThumbnail = ({
+  navigation,
+  id,
+  name,
+  title,
+  content,
+  isPinned,
+  lastModified,
+}: Props) => {
   const source = {
     html: content,
   };
@@ -38,14 +49,35 @@ const PostThumbnail = ({ navigation, id, name, title, content }: Props) => {
   return (
     <TouchableOpacity onPress={handlePostPress} style={styles.container}>
       <View style={styles.upperContainer}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.profileImage} />
-          <View style={{ marginLeft: 7 }}>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={styles.time}>2분 전</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flex: 1,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={styles.profileImage} />
+            <View style={{ marginLeft: 7 }}>
+              <Text style={styles.name}>{name}</Text>
+              <Text style={styles.time}>{timeAgo(new Date(lastModified))}</Text>
+            </View>
           </View>
+          {isPinned && (
+            <AntDesign
+              name="pushpin"
+              size={18}
+              color="#333"
+              style={{
+                marginRight: 7,
+                transform: [{ scaleX: -1 }],
+              }}
+            />
+          )}
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center", top: -5 }}>
+        {/* Likes and comment count */}
+        {/* <View style={{ flexDirection: "row", alignItems: "center", top: -5 }}>
           <FontAwesome5 name="comment" size={17} color="black" />
           <Text style={styles.count}> 3</Text>
           <Octicons
@@ -55,7 +87,7 @@ const PostThumbnail = ({ navigation, id, name, title, content }: Props) => {
             style={{ marginLeft: 10 }}
           />
           <Text style={styles.count}> 3</Text>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.lowerContainer}>
@@ -98,7 +130,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   time: {
-    fontSize: 9,
+    fontSize: 10,
     marginTop: 3,
   },
   count: {

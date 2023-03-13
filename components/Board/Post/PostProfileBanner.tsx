@@ -1,14 +1,24 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React from "react";
 import { Octicons, Feather } from "@expo/vector-icons";
+import timeAgo from "../../TimeAgo";
 
 type Props = {
   name: any;
-  // lastModified: any;
-  // boardType: string;
+  lastModified: any;
+  boardType: string;
 };
 
-const PostProfileBanner = ({ name }: Props) => {
+const PostProfileBanner = ({ name, boardType, lastModified }: Props) => {
+  const boardTypeToKorean = {
+    announcement: "공지사항",
+    freshmen: "신입생 게시판",
+    general: "자유게시판",
+    graduated: "졸업생 게시판",
+    market: "벼룩시장",
+    jobs: "취업/인턴",
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.upperContainer}>
@@ -19,11 +29,12 @@ const PostProfileBanner = ({ name }: Props) => {
               <Text style={styles.name}>{name}</Text>
               <Text style={[styles.subtitles, { top: -2 }]}>
                 {" "}
-                @신입생 게시판
+                @{/* @ts-ignore */}
+                {boardTypeToKorean[boardType]}
               </Text>
             </View>
             <Text style={styles.subtitles}>
-              2분 전 (최근 수정: 10/21 13:49)
+              {timeAgo(new Date(lastModified))} (최근 수정: 10/21 13:49)
             </Text>
           </View>
         </View>

@@ -14,8 +14,9 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { Alert, ColorSchemeName, Pressable } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { useState } from "react";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -29,6 +30,7 @@ import {
 import LinkingConfiguration from "./LinkingConfiguration";
 import { Feather, Octicons, Ionicons } from "@expo/vector-icons";
 
+import StartScreen from "../screens/StartScreen";
 import LoginScreen from "../screens/Authentication/LoginScreen";
 import ResetPassword from "../screens/Authentication/ResetPassword";
 import SelectStuType from "../screens/Authentication/SignUp/SelectStuType";
@@ -43,18 +45,64 @@ import PostList from "../screens/Home/Board/PostList";
 import GeneralBoard from "../screens/Home/Board/GeneralBoard";
 import Announcement from "../screens/Home/Board/Announcement";
 import PostScreen from "../screens/Home/Board/PostScreen";
+import AddPostScreen from "../screens/Home/Board/AddPostScreen";
+import NotificationDrawerScreen from "../screens/Home/Notification/NotificationDrawerScreen";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EditProfileScreen from "../screens/Home/Profile/EditProfileScreen";
 import DrawerContent from "../components/Drawer/DrawerContent";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUser } from "../redux/features/user";
+//@ts-ignore
+import { REACT_APP_HOST } from "@env";
 
 export default function Navigation({
   colorScheme,
 }: {
   colorScheme: ColorSchemeName;
 }) {
-  const user = useSelector((state: any) => state.user.value);
-  console.log(user);
+  const dispatch = useDispatch();
+  // from async storage (user chooses to keep logged in)
+
+  const [userObject, setUserObject] = useState<any>({});
+  React.useEffect(() => {
+    getUserObject();
+  }, []);
+
+  const getUserObject = async () => {
+    const userFromAsyncStorage = await AsyncStorage.getItem("userObject");
+    if (userFromAsyncStorage !== null) {
+      const userFromAsyncStorageObject = JSON.parse(userFromAsyncStorage);
+      setUserObject(userFromAsyncStorageObject);
+      dispatch(setUser(userFromAsyncStorageObject));
+
+      // Sign In
+      // If app reloads, user information exists, but user is actually not signed in
+      const userPasswordFromAsyncStorage = await AsyncStorage.getItem(
+        "userPassword"
+      );
+      const url = REACT_APP_HOST + "/api/auth/signin";
+
+      const credentialObject = {
+        email: userFromAsyncStorageObject.email,
+        password: userPasswordFromAsyncStorage,
+      };
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(credentialObject),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      // if (response.status !== 200) {
+      //   Alert.alert(response.status)
+      // }
+    }
+  };
+
+  const user = useSelector((state: any) => state.user.value); // from redux
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -75,9 +123,14 @@ function RootNavigator({ user }: { user: any }) {
   return (
     // initialRouteName={user.email == "" ? "LoginScreen" : "Main"}
 
-    user.email == "" ? (
+    user.email === "" ? (
       <Stack.Navigator>
         <Stack.Group>
+          {/* <Stack.Screen
+            name="StartScreen"
+            component={StartScreen}
+            options={{ headerShown: false }}
+          /> */}
           <Stack.Screen
             name="LoginScreen"
             component={LoginScreen}
@@ -127,13 +180,16 @@ function RootNavigator({ user }: { user: any }) {
         </Stack.Group>
       </Stack.Navigator>
     ) : (
-      <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
-        <Drawer.Screen
-          name="main"
-          component={Main}
+      <MainDrawer.Navigator
+        id="LeftDrawer"
+        drawerContent={(props) => <DrawerContent {...props} />}
+      >
+        <MainDrawer.Screen
+          name="Notification"
+          component={NotificationDrawer}
           options={{ headerShown: false }}
         />
-      </Drawer.Navigator>
+      </MainDrawer.Navigator>
     )
   );
 }
@@ -193,6 +249,13 @@ const Board = () => {
       <BoardStack.Screen
         name="PostScreen"
         component={PostScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <BoardStack.Screen
+        name="AddPostScreen"
+        component={AddPostScreen}
         options={{
           headerShown: false,
         }}
@@ -257,35 +320,25 @@ function BottomTabNavigator() {
   );
 }
 
-const Drawer = createDrawerNavigator();
+const MainDrawer = createDrawerNavigator();
 
-function DrawerNavigator() {
+const RightDrawer = createDrawerNavigator();
+
+const NotificationDrawer = () => {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen
-        name="Main"
-        component={BottomTabNavigator}
-        options={{
-          drawerLabel: "Home",
-        }}
+    <RightDrawer.Navigator
+      id="RightDrawer"
+      screenOptions={{ drawerPosition: "right", headerShown: false }}
+      drawerContent={(props) => <NotificationDrawerScreen {...props} />}
+    >
+      <MainDrawer.Screen
+        name="main"
+        component={Main}
+        options={{ headerShown: false }}
       />
-      {/* <Drawer.Screen
-      //   name="BoardScreen"
-      //   component={BoardScreen}
-      //   options={{
-      //     drawerLabel: "Board",
-      //   }}
-      // />
-      // <Drawer.Screen
-      //   name="ProfileScreen"
-      //   component={ProfileScreen}
-      //   options={{
-      //     drawerLabel: "Home",
-      //   }}
-      // /> */}
-    </Drawer.Navigator>
+    </RightDrawer.Navigator>
   );
-}
+};
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/

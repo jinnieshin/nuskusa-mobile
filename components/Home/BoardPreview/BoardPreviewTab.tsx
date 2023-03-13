@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import BoardPreviewList from "./BoardPreviewList";
 
 const BoardPreviewTab = ({ navigation }: { navigation: any }) => {
-  const [tab, setTab] = useState<string>("Hot");
+  const [tab, setTab] = useState<string>("general");
 
   const handleHotPress = () => {
     setTab("Hot");
@@ -85,7 +85,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     width: width * 0.9,
-    height: 270,
+    height: 290,
     backgroundColor: "#F3F4F6",
   },
   tabsContainer: {

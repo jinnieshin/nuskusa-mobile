@@ -6,12 +6,21 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Keyboard,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Replies from "./Replies";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
 import * as Animatable from "react-native-animatable";
+import { Feather, FontAwesome } from "@expo/vector-icons";
+import PostComment from "./PostComment";
+import { useSelector, useDispatch } from "react-redux";
+import PostReplies from "./PostReplies";
+import { setCommentContent } from "../../../redux/features/commentContent";
+import * as Haptics from "expo-haptics";
+import { setRefresh } from "../../../redux/features/refresher";
 
 type commentObject = {
   id: number;
@@ -37,20 +46,72 @@ const Comments = ({
   profileImage,
 }: commentObject) => {
   const [repliesArr, setRepliesArr] = useState<any>([]);
-  const [refresh, setRefresh] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
+  const [writeReplies, setWriteReplies] = useState<boolean>(false);
+
+  const refresh: string = useSelector((state: any) => state.refresh.value);
+
+  const openReplies = () => {
+    setWriteReplies(true);
+  };
+
+  const cancelReply = () => {
+    setWriteReplies(false);
+  };
+
+  const comment = useSelector((state: any) => state.commentContent.value);
+  const dispatch = useDispatch();
+
+  const upvoteComment = async () => {
+    const url = REACT_APP_HOST + "/api/post/pushCommentUpvote/" + id;
+    const response = await fetch(url, {
+      method: "POST",
+    });
+
+    if (response.status == 200) {
+      const json = await response.json();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      dispatch(setRefresh());
+    } else {
+      Alert.alert("좋아요 처리에 실패했습니다.");
+    }
+  };
+
+  const addReply = async () => {
+    if (comment == "") {
+      Alert.alert("댓글 내용을 작성해주세요.");
+      return;
+    }
+    const url = REACT_APP_HOST + "/api/post/addComment/" + postId;
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        content: comment,
+        replyTo: id,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status == 201) {
+      setWriteReplies(false);
+      dispatch(setCommentContent(""));
+    } else {
+      Alert.alert(
+        "댓글 작성에 실패했습니다. 오류가 계속되면 한인회 IT팀에게 문의해주세요."
+      );
+    }
+  };
 
   const fetchReplies = async () => {
     const url = REACT_APP_HOST + "/api/post/getComments/" + id;
     const response = await fetch(url, {
       method: "GET",
     });
-    console.log(url);
-    console.log(response.status);
     if (response.status == 200) {
       const repliesArr = await response.json();
-      console.log(repliesArr);
       setRepliesArr(repliesArr);
     }
   };
@@ -62,6 +123,11 @@ const Comments = ({
   useEffect(() => {
     fetchReplies().catch(console.error);
   }, [refresh]);
+
+  const handleWriteComment = () => {
+    setShowKeyboard(!showKeyboard);
+    // Keyboard.
+  };
 
   return (
     <View style={styles.container}>
@@ -75,7 +141,10 @@ const Comments = ({
       <View style={styles.contentContainer}>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.name}>{author}</Text>
-          <Text style={{ fontSize: 9 }}>{"    "}25분 전</Text>
+          <Text style={{ fontSize: 9 }}>
+            {"    "}
+            25분 전
+          </Text>
         </View>
         <Text style={styles.content}>{content}</Text>
 
@@ -83,10 +152,23 @@ const Comments = ({
           <Text style={[styles.buttons, { marginRight: 20 }]}>
             좋아요 {upvoteCount}개
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={openReplies}>
             <Text style={styles.buttons}>답글 쓰기</Text>
           </TouchableOpacity>
         </View>
+        {writeReplies && (
+          <View>
+            <PostReplies postId={postId} commentId={id} />
+            <View style={styles.postButtonsContainer}>
+              <TouchableOpacity onPress={cancelReply}>
+                <Text style={styles.cancelButton}>취소</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={addReply}>
+                <Text style={styles.postButton}>게시</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
         {/* If there exist replies to the comment, have a button to load them */}
         {repliesArr.length > 0 && !showReplies ? (
           <TouchableOpacity
@@ -107,7 +189,7 @@ const Comments = ({
           </TouchableOpacity>
         ) : (
           repliesArr.length > 0 && (
-            <Animatable.View animation="slideInLeft">
+            <Animatable.View>
               {repliesArr.map((reply: any) => {
                 return (
                   <Replies
@@ -118,7 +200,7 @@ const Comments = ({
                     upvoted={reply.upvoted}
                     postId={reply.post}
                     lastModified={new Date(reply.updatedAt)}
-                    // replyTo={reply.replyTo}
+                    replyTo={reply.replyTo}
                     isMine={reply.isMine}
                     profileImage={reply.author.profileImageUrl}
                   />
@@ -144,6 +226,16 @@ const Comments = ({
           )
         )}
       </View>
+      <TouchableOpacity
+        style={{ flex: 0.08, height: 20, alignItems: "center" }}
+        onPress={upvoteComment}
+      >
+        {upvoted ? (
+          <FontAwesome name="heart" size={13} color="#DD0000" />
+        ) : (
+          <Feather name="heart" size={13} color="black" />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -156,7 +248,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     width: width * 0.9,
-    // borderWidth: 1,
     flexDirection: "row",
     padding: 10,
   },
@@ -171,7 +262,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginTop: 2,
-    flex: 0.87,
+    flex: 0.79,
     justifyContent: "space-between",
   },
   name: {
@@ -193,5 +284,25 @@ const styles = StyleSheet.create({
   replyButton: {
     fontSize: 12,
     color: "#808080",
+  },
+  // replyButton: {
+  //   fontSize: 12,
+  //   color: "#808080",
+  // },
+  postButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  cancelButton: {
+    fontSize: 13,
+    color: "#bfbfbf",
+    margin: 10,
+    marginRight: 20,
+  },
+  postButton: {
+    fontSize: 13,
+    color: "#BCA06D",
+    margin: 10,
+    fontWeight: "600",
   },
 });

@@ -1,11 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Platform,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Image, Platform } from "react-native";
+import { View, Text } from "../../../components/Themed";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "../../../components/Authentication/CustomButton";
@@ -24,7 +18,7 @@ const AgreementScreen = ({ navigation }: { navigation: any }) => {
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.icon}>
+      <TouchableOpacity style={styles.icon} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={28} color="black" />
       </TouchableOpacity>
       <Image
@@ -71,6 +65,7 @@ export default AgreementScreen;
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+    flex: 1,
   },
   icon: {
     position: "absolute",

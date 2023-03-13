@@ -4,6 +4,8 @@ import { PostSummary } from "../../../types/PostSummary";
 import { useEffect, useState } from "react";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import { AntDesign } from "@expo/vector-icons";
+import timeAgo from "../../../components/TimeAgo";
 
 type Props = {
   post: PostSummary;
@@ -40,8 +42,9 @@ const PostPreviewItem = ({ post, content, time, upvoteCount }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.contentText}>{content}</Text>
-      <Text style={styles.timeStamp}>{time}분 전</Text>
-      <Text style={styles.upvotes}>❤️ {item?.upvoteCount}</Text>
+      <Text style={styles.timeStamp}>{timeAgo(new Date(time))}</Text>
+      <AntDesign name="heart" size={14} color="#DD0000" />
+      <Text style={styles.upvotes}> {item?.upvoteCount}</Text>
     </View>
   );
 };
@@ -64,10 +67,10 @@ const styles = StyleSheet.create({
   },
   timeStamp: {
     fontSize: 12,
-    flex: 0.15,
+    flex: 0.2,
   },
   upvotes: {
     fontSize: 12,
-    flex: 0.2,
+    flex: 0.15,
   },
 });

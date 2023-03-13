@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../redux/features/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
 
@@ -78,6 +79,8 @@ const EditInfoSection = ({
             redirect: "follow",
           });
           navigation.navigate("LoginScreen");
+          await AsyncStorage.removeItem("userObject");
+          await AsyncStorage.removeItem("userPassword");
         } else if (response.status == 400) {
           Alert.alert("인증 이메일을 보내지 못했습니다.");
         } else if (response.status == 409) {

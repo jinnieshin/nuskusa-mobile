@@ -16,7 +16,7 @@ import { setCurrentBoardPage } from "../../../redux/features/currentBoardPage";
 const JobsItemList = ({ navigation }: { navigation: any }) => {
   const [board, setBoard] = useState({});
   const [permission, setPermission] = useState({});
-  const [postArr, setPostArray] = useState<PostSummary[]>([]);
+  const [postArr, setPostArray] = useState<any[]>([]);
 
   const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ const JobsItemList = ({ navigation }: { navigation: any }) => {
       const postArray = [];
       for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
-        const postObject: PostSummary = {
+        const postObject: any = {
           id: post.id,
           title: post.title,
           content: post.content,
@@ -109,7 +109,7 @@ const JobsItemList = ({ navigation }: { navigation: any }) => {
               <PostPreviewItem
                 post={item}
                 content={item.title}
-                time={1}
+                time={item.createdAt}
                 upvoteCount={1}
               />
             ))}

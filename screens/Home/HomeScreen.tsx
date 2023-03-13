@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   announcementContainer: {
     marginTop: 20,
     flexDirection: "row",
-    backgroundColor: "#e7e8e9",
+    backgroundColor: "#F3F4F6",
     width: width * 0.9,
     height: 35,
     alignItems: "center",
@@ -64,11 +64,12 @@ const styles = StyleSheet.create({
   },
   announcementLabel: {
     fontWeight: "700",
-    fontSize: 15,
-    flex: 0.15,
+    fontSize: 13,
+    flex: 0.12,
   },
   announcementContent: {
-    flex: 0.85,
+    flex: 0.88,
+    fontSize: 12,
   },
   boardPreviewContainer: {
     marginTop: 30,

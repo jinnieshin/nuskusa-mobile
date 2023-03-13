@@ -137,6 +137,7 @@ function Graduates({ navigation }: { navigation: any }): JSX.Element {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ backgroundColor: "white" }}
     >
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         <TouchableOpacity

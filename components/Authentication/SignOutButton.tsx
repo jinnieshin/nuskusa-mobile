@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignOutButton = ({ navigation }: { navigation: any }) => {
   const handleSignOut = async () => {
@@ -12,6 +13,8 @@ const SignOutButton = ({ navigation }: { navigation: any }) => {
       });
       if (response.status == 200) {
         navigation.navigate("LoginScreen");
+        await AsyncStorage.removeItem("userObject");
+        await AsyncStorage.removeItem("userPassword");
       } else {
         Alert.alert("로그아웃 중 오류가 발생했습니다: " + response.body);
       }

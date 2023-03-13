@@ -5,6 +5,7 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,7 +23,8 @@ type Props = {
 const BoardPreviewList = ({ navigation, boardType }: Props) => {
   const [board, setBoard] = useState({});
   const [permission, setPermission] = useState({});
-  const [postArr, setPostArray] = useState<PostSummary[]>([]);
+  const [postArr, setPostArray] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchBoard().catch(console.error);
@@ -37,6 +39,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
   };
 
   const fetchBoard = async () => {
+    setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getBoard/" + boardType;
     const response = await fetch(url, {
       method: "GET",
@@ -54,10 +57,12 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
       };
       setBoard(boardObject);
       setPermission(permission);
+      setLoading(false);
     }
   };
 
   const fetchPosts = async () => {
+    setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getPosts/" + boardType;
     const response = await fetch(url, {
       method: "GET",
@@ -67,7 +72,7 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
       const postArray = [];
       for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
-        const postObject: PostSummary = {
+        const postObject: any = {
           id: post.id,
           title: post.title,
           content: post.content,
@@ -85,16 +90,18 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
         );
         // postArray.push(postObject);
         postArray.push(post);
-        if (postArray.length == 8) {
-          // Maintain the number of preview posts to the most recent 7 posts
+        if (postArray.length == 6) {
+          // Maintain the number of preview posts to the most recent 5 posts
           postArray.shift;
         }
       }
+
       setPostArray(postArray);
+      setLoading(false);
     }
   };
 
-  const fetchPostUpVote = async (post: PostSummary) => {
+  const fetchPostUpVote = async (post: any) => {
     const url = REACT_APP_HOST + "/api/post/getPosts/" + post.id;
     const response = await fetch(url, {
       method: "GET",
@@ -122,14 +129,18 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
           )}
           showsVerticalScrollIndicator={false}
         /> */}
-          {postArr.map((item) => (
-            <PostPreviewItem
-              post={item}
-              content={item.title}
-              time={1}
-              upvoteCount={1}
-            />
-          ))}
+          {loading ? (
+            <ActivityIndicator style={{ marginTop: 20 }} />
+          ) : (
+            postArr.map((item: any) => (
+              <PostPreviewItem
+                post={item}
+                content={item.title}
+                time={item.createdAt}
+                upvoteCount={1}
+              />
+            ))
+          )}
         </View>
         <TouchableOpacity
           style={styles.viewAllContainer}
@@ -147,7 +158,7 @@ export default BoardPreviewList;
 const styles = StyleSheet.create({
   itemsContainer: {
     alignItems: "center",
-    height: 193,
+    height: 213,
   },
   viewAllContainer: {
     justifyContent: "center",

@@ -1,11 +1,10 @@
 import {
-  View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Platform,
   Dimensions,
 } from "react-native";
+import { View, Text } from "../Themed";
 import React from "react";
 
 const CustomButton = ({

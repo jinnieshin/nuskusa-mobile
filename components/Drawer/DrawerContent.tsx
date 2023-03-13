@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/features/user";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import { setCurrentBoardPage } from "../../redux/features/currentBoardPage";
 
 const Drawer = ({ navigation }: { navigation: any }) => {
   const dispatch = useDispatch();
@@ -50,40 +51,81 @@ const Drawer = ({ navigation }: { navigation: any }) => {
     }
   };
 
+  const navigateAnnouncement = () => {
+    dispatch(setCurrentBoardPage("announcement"));
+    navigation.navigate("PostList", { boardType: "announcement" });
+  };
+  const navigateFreshmen = () => {
+    dispatch(setCurrentBoardPage("freshmen"));
+    navigation.navigate("PostList", { boardType: "freshmen" });
+  };
+  const navigateGeneral = () => {
+    dispatch(setCurrentBoardPage("general"));
+    navigation.navigate("PostList", { boardType: "general" });
+  };
+
+  const navigateGraduated = () => {
+    dispatch(setCurrentBoardPage("graduated"));
+    navigation.navigate("PostList", { boardType: "graduated" });
+  };
+  const navigateMarket = () => {
+    dispatch(setCurrentBoardPage("market"));
+    navigation.navigate("PostList", { boardType: "market" });
+  };
+  const navigateJobs = () => {
+    dispatch(setCurrentBoardPage("jobs"));
+    navigation.navigate("PostList", { boardType: "jobs" });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <Badge />
         <MyPageButton navigation={navigation} />
         <View style={[styles.line, { marginTop: 25 }]} />
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={navigateAnnouncement}
+        >
           <Text style={styles.buttonText}>공지사항</Text>
         </TouchableOpacity>
 
         <View style={styles.line} />
 
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={navigateAnnouncement}
+        >
           <Text style={styles.buttonText}>HOT 게시판</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={navigateGeneral}
+        >
           <Text style={styles.buttonText}>자유게시판</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={navigateFreshmen}
+        >
           <Text style={styles.buttonText}>신입생 게시판</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity
+          style={styles.textContainer}
+          onPress={navigateGraduated}
+        >
           <Text style={styles.buttonText}>졸업생 게시판</Text>
         </TouchableOpacity>
 
         <View style={styles.line} />
 
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity style={styles.textContainer} onPress={navigateMarket}>
           <Text style={styles.buttonText}>벼룩시장</Text>
         </TouchableOpacity>
 
         <View style={styles.line} />
 
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity style={styles.textContainer} onPress={navigateJobs}>
           <Text style={styles.buttonText}>취업/인턴</Text>
         </TouchableOpacity>
 

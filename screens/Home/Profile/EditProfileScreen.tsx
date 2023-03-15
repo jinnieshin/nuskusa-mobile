@@ -16,7 +16,7 @@ const EditProfileScreen = ({ navigation }: { navigation: any }) => {
   const canChangeEmail = userdata?.email.split("@")[1] != "u.nus.edu";
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <Banner iconLeft="arrow-back" iconRight="" navigation={navigation} />
         <View style={styles.secondBody}>
           {userdata.profileImageUrl == "" ? (
@@ -48,7 +48,7 @@ export default EditProfileScreen;
 
 const styles = StyleSheet.create({
   secondBody: {
-    marginTop: 60,
+    marginTop: 20,
     alignItems: "center",
   },
   emptyLogo: {

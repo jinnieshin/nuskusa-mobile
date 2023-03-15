@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   secondBody: {
-    marginVertical: 60,
+    marginVertical: 20,
   },
   editProfileButtonContainer: {
     backgroundColor: "#D9D9D9",

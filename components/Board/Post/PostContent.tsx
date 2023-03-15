@@ -26,6 +26,7 @@ const PostContent = ({
   upvoteCount,
   upvoted,
   commentCount,
+  author,
 }: {
   postId: number;
   title: string;
@@ -33,11 +34,13 @@ const PostContent = ({
   upvoteCount: number;
   upvoted: boolean;
   commentCount: number;
+  author: any;
 }) => {
   const [commentArr, setCommentArr] = useState<any>([]);
   // const [openComment, setOpenComment] = useState<boolean>(false);
 
   const openComment = useSelector((state: any) => state.openCommentInput.value);
+  const currentUser = useSelector((state: any) => state.user.value);
 
   const dispatch = useDispatch();
   console.log(content);
@@ -94,6 +97,8 @@ const PostContent = ({
     }
   };
 
+  console.log(author);
+
   useEffect(() => {
     fetchComments().catch(console.error);
   }, [postId, refresh]);
@@ -113,19 +118,34 @@ const PostContent = ({
         />
       </View>
       <View style={styles.contentCommentDivider}>
-        <TouchableOpacity onPress={handleCommentPress}>
-          <FontAwesome5 name="comment" size={20} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.counts}> {commentCount}</Text>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity onPress={handleCommentPress}>
+            <FontAwesome5 name="comment" size={20} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.counts}> {commentCount}</Text>
 
-        <TouchableOpacity onPress={upvotePost} style={{ flexDirection: "row" }}>
-          {upvoted ? (
-            <FontAwesome name="heart" size={20} color="#DD0000" />
-          ) : (
-            <Feather name="heart" size={20} color="black" />
-          )}
-          <Text style={styles.counts}> {upvoteCount}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={upvotePost}
+            style={{ flexDirection: "row" }}
+          >
+            {upvoted ? (
+              <FontAwesome name="heart" size={20} color="#DD0000" />
+            ) : (
+              <Feather name="heart" size={20} color="black" />
+            )}
+            <Text style={styles.counts}> {upvoteCount}</Text>
+          </TouchableOpacity>
+        </View>
+        {author === currentUser.email && (
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity>
+              <Text style={styles.editPostButton}>수정</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 10 }}>
+              <Text style={styles.editPostButton}>삭제</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <View style={{ minHeight: 100 }}>
         {openComment && <PostComment postId={postId} commentId={null} />}
@@ -176,6 +196,7 @@ const styles = StyleSheet.create({
   },
   contentCommentDivider: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#0B121C5C",
@@ -186,5 +207,9 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 13,
     marginRight: 15,
+  },
+  editPostButton: {
+    fontSize: 12.5,
+    fontWeight: "700",
   },
 });

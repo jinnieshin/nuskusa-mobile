@@ -29,13 +29,11 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
       method: "GET",
     });
 
-    console.log(response.status);
-
     if (response.status == 200) {
       const post = await response.json();
       post.lastModified = new Date(post.updatedAt);
       post.lastModified.setHours(post.lastModified.getHours());
-      console.log("Success");
+      console.log("Post", post);
       setPost(post);
     }
   };
@@ -60,6 +58,7 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
           upvoteCount={currentPost.upvoteCount}
           upvoted={currentPost.upvoted}
           commentCount={currentPost.commentCount}
+          author={currentPost.author}
         />
       </ScrollView>
     </View>
@@ -72,7 +71,6 @@ const { width, height } = Dimensions.get("screen");
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
     height: height * 0.75,
   },
 });

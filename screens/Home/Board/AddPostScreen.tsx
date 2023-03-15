@@ -14,12 +14,13 @@ import {
 import { View, Text } from "../../../components/Themed";
 import Banner from "../../../components/Banner";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import ImageFile from "../../../components/Board/Post/ImageFile";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import { setRefresh } from "../../../redux/features/refresher";
 
 const AddPostScreen = ({ navigation }: { navigation: any }) => {
   const currentBoardPage: string = useSelector(
@@ -31,6 +32,8 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
   const [image, setImage] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+
+  const dispatch = useDispatch();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -53,13 +56,15 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
   const uploadImage = async () => {
     const formData = new FormData();
     formData.append("file", image);
+    console.log(image);
     //@ts-ignore
     const ref = userdata.email + "(" + userdata.name + ")_" + image;
-    const url = REACT_APP_HOST + "/api/post/uploadPostAttachment/" + ref;
+    const url = REACT_APP_HOST + "/api/post/uploadPostAttachment/" + image;
     const response = await fetch(url, {
       method: "POST",
       body: formData,
     });
+    console.log("respones: ", response);
     if (response.status !== 200) {
       Alert.alert("파일 업로드에 실패했습니다. " + response.body);
     }
@@ -100,6 +105,7 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
     });
 
     if (response.status == 201) {
+      dispatch(setRefresh());
       navigation.navigate("PostList", { boardType: currentBoardPage });
     } else {
       const errMsg = await response.text();
@@ -214,15 +220,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   body: {
-    marginTop: 20,
-    padding: 17,
+    paddingHorizontal: 17,
     flex: 1,
   },
   boardType: {
     fontSize: 13,
     fontWeight: "700",
     marginLeft: 5,
-    marginTop: 5,
   },
   titleContainer: {
     marginTop: 5,

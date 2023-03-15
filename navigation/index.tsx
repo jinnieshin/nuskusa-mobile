@@ -78,7 +78,7 @@ export default function Navigation({
       dispatch(setUser(userFromAsyncStorageObject));
 
       // Sign In
-      // If app reloads, user information exists, but user is actually not signed in
+      // If app reloads, user information exists, but user is not signed in
       const userPasswordFromAsyncStorage = await AsyncStorage.getItem(
         "userPassword"
       );

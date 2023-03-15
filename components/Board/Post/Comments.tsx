@@ -97,6 +97,7 @@ const Comments = ({
     });
     if (response.status == 201) {
       setWriteReplies(false);
+      dispatch(setRefresh());
       dispatch(setCommentContent(""));
     } else {
       Alert.alert(

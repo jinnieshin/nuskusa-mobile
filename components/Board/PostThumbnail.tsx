@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { FontAwesome5, Octicons, AntDesign } from "@expo/vector-icons";
+import { FontAwesome5, Octicons, AntDesign, Feather } from "@expo/vector-icons";
 import RenderHtml from "react-native-render-html";
 import timeAgo from "../TimeAgo";
+import { useSelector } from "react-redux";
 
 type Props = {
   id: string;
@@ -19,6 +20,7 @@ type Props = {
   content: string;
   isPinned: boolean;
   lastModified: any;
+  email: string;
   // upvoteCount: number;
   // commentCount: number;
   // profileImage: string;
@@ -32,6 +34,7 @@ const PostThumbnail = ({
   content,
   isPinned,
   lastModified,
+  email,
 }: Props) => {
   const source = {
     html: content,
@@ -40,6 +43,8 @@ const PostThumbnail = ({
   const handlePostPress = () => {
     navigation.navigate("PostScreen", { postId: id });
   };
+
+  const currentUser = useSelector((state: any) => state.user.value);
 
   const htmlString = content;
   const temp = htmlString.replace(/&nbsp;/g, " ");
@@ -58,12 +63,25 @@ const PostThumbnail = ({
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View style={styles.profileImage} />
-            <View style={{ marginLeft: 7 }}>
+            {/* <View style={styles.profileImage} /> */}
+            <View style={{ marginLeft: 0 }}>
               <Text style={styles.name}>{name}</Text>
               <Text style={styles.time}>{timeAgo(new Date(lastModified))}</Text>
             </View>
           </View>
+          {email === currentUser.email && (
+            <TouchableOpacity
+              onPress={() => console.log("ok")}
+              style={{
+                // for larger pressable area
+                width: 50,
+                height: 30,
+                alignItems: "flex-end",
+              }}
+            >
+              <Feather name="edit-3" size={20} color="#BCA06D" />
+            </TouchableOpacity>
+          )}
           {isPinned && (
             <AntDesign
               name="pushpin"
@@ -76,18 +94,6 @@ const PostThumbnail = ({
             />
           )}
         </View>
-        {/* Likes and comment count */}
-        {/* <View style={{ flexDirection: "row", alignItems: "center", top: -5 }}>
-          <FontAwesome5 name="comment" size={17} color="black" />
-          <Text style={styles.count}> 3</Text>
-          <Octicons
-            name="heart-fill"
-            size={17}
-            color="#cc0000"
-            style={{ marginLeft: 10 }}
-          />
-          <Text style={styles.count}> 3</Text>
-        </View> */}
       </View>
 
       <View style={styles.lowerContainer}>
@@ -114,6 +120,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 3,
     marginBottom: 10,
+    paddingHorizontal: 7,
   },
   upperContainer: {
     flexDirection: "row",
@@ -126,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 36,
   },
   name: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "700",
   },
   time: {
@@ -138,7 +145,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   lowerContainer: {
-    marginTop: 13,
+    marginTop: 9,
   },
   title: {
     fontSize: 16,
@@ -147,5 +154,6 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 12,
     marginTop: 3,
+    maxHeight: 40,
   },
 });

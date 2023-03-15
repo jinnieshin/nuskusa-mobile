@@ -2,6 +2,8 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 
+// USELESS
+
 const BoardHeader = () => {
   return (
     <View style={styles.container}>

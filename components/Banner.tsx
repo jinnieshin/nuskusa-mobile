@@ -3,6 +3,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const Banner = ({
   navigation,
@@ -25,7 +26,7 @@ const Banner = ({
     navigation.getParent("RightDrawer").toggleDrawer();
   };
   return (
-    <SafeAreaView style={{ backgroundColor: "black", height: 44 }}>
+    <View style={{ backgroundColor: "black" }}>
       <StatusBar style="light" />
       <View style={styles.container}>
         {/* icons: menu, notification, navigateBack, or none */}
@@ -48,7 +49,8 @@ const Banner = ({
           <View style={{ width: 20, height: 20 }}></View> // This is for 'none'
         )}
       </View>
-    </SafeAreaView>
+      <View style={{ height: 13, backgroundColor: "white" }} />
+    </View>
   );
 };
 
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 21,
+    marginTop: getStatusBarHeight(),
   },
   text: {
     color: "#BCA06D",

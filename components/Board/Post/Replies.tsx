@@ -88,6 +88,7 @@ const Replies = ({
       },
     });
     if (response.status == 201) {
+      dispatch(setRefresh());
       setWriteReplies(false);
       dispatch(setCommentContent(""));
     } else {

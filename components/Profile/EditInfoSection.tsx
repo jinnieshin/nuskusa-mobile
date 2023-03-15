@@ -217,22 +217,22 @@ const styles = StyleSheet.create({
   container: {
     width: width * 0.9,
     height: 280,
-    backgroundColor: "#e7e8e9",
+    backgroundColor: "#f4f5f6",
     paddingHorizontal: 15,
     justifyContent: "space-evenly",
     marginTop: 30,
   },
   rowContainer: {
     flexDirection: "row",
-    backgroundColor: "#e7e8e9",
+    backgroundColor: "#f4f5f6",
     alignItems: "center",
   },
   labelContainer: {
-    backgroundColor: "#e7e8e9",
+    backgroundColor: "#f4f5f6",
     flex: 0.28,
   },
   infoContainer: {
-    backgroundColor: "#e7e8e9",
+    backgroundColor: "#f4f5f6",
     flex: 0.72,
   },
   labelCantChange: {

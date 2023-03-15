@@ -50,11 +50,10 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 21,
     // alignItems: "center",
   },
   announcementContainer: {
-    marginTop: 20,
+    // marginTop: 20,
     flexDirection: "row",
     backgroundColor: "#F3F4F6",
     width: width * 0.9,

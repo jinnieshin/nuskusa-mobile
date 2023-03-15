@@ -77,6 +77,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
           isEvent: post.isEvent,
           lastModified: new Date(post.createdAt),
           author: post.author,
+          email: post.email,
           // profileImage: post.profileImage,
           // upvoteCount: post.upvoteCount,
         };
@@ -86,6 +87,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
         // postArray.push(postObject);
         postArray.push(post);
       }
+      console.log(postArray[2]);
       setPostArray(postArray);
       setLoading(false);
     }
@@ -145,6 +147,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
                     title={item.title}
                     isPinned={item.isPinned}
                     lastModified={item.updatedAt}
+                    email={item.email}
                     // profileImage={item?.profileImageUrl}
                   />
                 ) : (
@@ -166,7 +169,7 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    // marginTop: 40,
     paddingHorizontal: 17,
   },
   headerContainer: {

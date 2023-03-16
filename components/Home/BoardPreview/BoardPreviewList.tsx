@@ -26,10 +26,11 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
   const [postArr, setPostArray] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const refresh = useSelector((state: any) => state.refresh.value);
   useEffect(() => {
     fetchBoard().catch(console.error);
     fetchPosts().catch(console.error);
-  }, [boardType]);
+  }, [boardType, refresh]);
 
   const dispatch = useDispatch();
 
@@ -61,6 +62,8 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
     }
   };
 
+  console.log(postArr.length);
+
   const fetchPosts = async () => {
     setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getPosts/" + boardType;
@@ -70,7 +73,8 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
     if (response.status == 200) {
       const posts = await response.json();
       const postArray = [];
-      for (let i = 0; i < posts.length; i++) {
+      const numOfItems = posts.length > 6 ? 6 : posts.length; // max items -> 6
+      for (let i = 0; i < numOfItems; i++) {
         const post = posts[i];
         const postObject: any = {
           id: post.id,
@@ -90,10 +94,6 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
         );
         // postArray.push(postObject);
         postArray.push(post);
-        if (postArray.length == 6) {
-          // Maintain the number of preview posts to the most recent 5 posts
-          postArray.shift;
-        }
       }
 
       setPostArray(postArray);

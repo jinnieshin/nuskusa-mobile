@@ -22,20 +22,16 @@ const PostPreviewItem = ({ post, content, time, upvoteCount }: Props) => {
   }, []);
 
   const fetchPostUpVote = async (postItem: PostSummary) => {
-    // console.log(postItem);
     const url = REACT_APP_HOST + "/api/post/getPost/" + postItem.id;
     const response = await fetch(url, {
       method: "GET",
     });
-
-    console.log(response.status);
 
     if (response.status == 200) {
       const post = await response.json();
       post.lastModified = new Date(post.updatedAt);
       post.lastModified.setHours(post.lastModified.getHours() - 8);
       setItem(post);
-      console.log("TERER: ", item);
     }
   };
 

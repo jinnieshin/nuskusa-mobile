@@ -47,6 +47,7 @@ import Announcement from "../screens/Home/Board/Announcement";
 import PostScreen from "../screens/Home/Board/PostScreen";
 import AddPostScreen from "../screens/Home/Board/AddPostScreen";
 import NotificationDrawerScreen from "../screens/Home/Notification/NotificationDrawerScreen";
+import EditPostScreen from "../screens/Home/Board/EditPostScreen";
 
 import { useDispatch, useSelector } from "react-redux";
 import EditProfileScreen from "../screens/Home/Profile/EditProfileScreen";
@@ -256,6 +257,13 @@ const Board = () => {
       <BoardStack.Screen
         name="AddPostScreen"
         component={AddPostScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <BoardStack.Screen
+        name="EditPostScreen"
+        component={EditPostScreen}
         options={{
           headerShown: false,
         }}

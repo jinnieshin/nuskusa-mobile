@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Vibration,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import RenderHTML from "react-native-render-html";
@@ -20,21 +21,23 @@ import { setRefresh } from "../../../redux/features/refresher";
 import * as Haptics from "expo-haptics";
 
 const PostContent = ({
+  navigation,
   postId,
   title,
   content,
   upvoteCount,
   upvoted,
   commentCount,
-  author,
+  userEmail,
 }: {
+  navigation: any;
   postId: number;
   title: string;
   content: string;
   upvoteCount: number;
   upvoted: boolean;
   commentCount: number;
-  author: any;
+  userEmail: string;
 }) => {
   const [commentArr, setCommentArr] = useState<any>([]);
   // const [openComment, setOpenComment] = useState<boolean>(false);
@@ -57,6 +60,14 @@ const PostContent = ({
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       dispatch(setRefresh());
     }
+  };
+
+  const handleEditPress = async () => {
+    navigation.navigate("EditPostScreen", {
+      postId: postId,
+      prevTitle: title,
+      prevContent: content,
+    });
   };
 
   const source = {
@@ -83,6 +94,33 @@ const PostContent = ({
     dispatch(setOpenCommentInput(true));
   };
 
+  const handleDeleteConfirmation = async () => {
+    Alert.alert("게시물을 삭제하시겠습니까?", "", [
+      {
+        text: "아니오",
+        onPress: () => {},
+        style: "cancel",
+      },
+      { text: "예", onPress: deletePost, style: "default" },
+    ]);
+  };
+
+  const deletePost = async () => {
+    const url = REACT_APP_HOST + "/api/post/deletePost/" + postId;
+    const response = await fetch(url, {
+      method: "DELETE",
+    });
+    if (response.status === 200) {
+      Alert.alert("정상적으로 삭제되었습니다.");
+      dispatch(setRefresh());
+      navigation.goBack();
+    } else {
+      Alert.alert(
+        "삭제 요처을 처리하는 도중 문제가 발생했습니다. 오류가 계속되면 하단의 한인회 IT팀에게 문의해주세요."
+      );
+    }
+  };
+
   const fetchComments = async () => {
     const url = REACT_APP_HOST + "/api/post/getPostComments/" + postId;
     const response = await fetch(url, {
@@ -96,8 +134,6 @@ const PostContent = ({
       setCommentArr(commentArr);
     }
   };
-
-  console.log(author);
 
   useEffect(() => {
     fetchComments().catch(console.error);
@@ -136,12 +172,15 @@ const PostContent = ({
             <Text style={styles.counts}> {upvoteCount}</Text>
           </TouchableOpacity>
         </View>
-        {author === currentUser.email && (
+        {userEmail === currentUser.email && (
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleEditPress}>
               <Text style={styles.editPostButton}>수정</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 10 }}>
+            <TouchableOpacity
+              onPress={handleDeleteConfirmation}
+              style={{ marginLeft: 15, marginRight: 3 }}
+            >
               <Text style={styles.editPostButton}>삭제</Text>
             </TouchableOpacity>
           </View>

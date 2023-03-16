@@ -112,7 +112,6 @@ const EditPostScreen = ({
     });
 
     console.log(response.status);
-    console.log(response);
 
     if (response.status === 201) {
       dispatch(setRefresh());

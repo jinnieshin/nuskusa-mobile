@@ -132,10 +132,11 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
           ) : (
             postArr.map((item: any) => (
               <PostPreviewItem
+                navigation={navigation}
                 post={item}
                 content={item.title}
                 time={item.createdAt}
-                upvoteCount={1}
+                boardType={boardType}
               />
             ))
           )}

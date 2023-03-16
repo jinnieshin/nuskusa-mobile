@@ -1,21 +1,41 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { PostSummary } from "../../../types/PostSummary";
 import { useEffect, useState } from "react";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
 import { AntDesign } from "@expo/vector-icons";
+import { setCurrentBoardPage } from "../../../redux/features/currentBoardPage";
+import { setRefresh } from "../../../redux/features/refresher";
 import timeAgo from "../../../components/TimeAgo";
+import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
+  navigation: any;
   post: PostSummary;
   content: string;
   time: number;
-  upvoteCount: number;
+  boardType: string;
 };
 
-const PostPreviewItem = ({ post, content, time, upvoteCount }: Props) => {
+const PostPreviewItem = ({
+  navigation,
+  post,
+  content,
+  time,
+  boardType,
+}: Props) => {
   const [item, setItem] = useState<any>();
+
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: any) => state.user.value);
 
   useEffect(() => {
     fetchPostUpVote(post);
@@ -35,13 +55,19 @@ const PostPreviewItem = ({ post, content, time, upvoteCount }: Props) => {
     }
   };
 
+  const navigateToPost = () => {
+    dispatch(setCurrentBoardPage(boardType));
+    dispatch(setRefresh());
+    navigation.navigate("PostScreen", { postId: post.id, email: user.email });
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={navigateToPost} style={styles.container}>
       <Text style={styles.contentText}>{content}</Text>
       <Text style={styles.timeStamp}>{timeAgo(new Date(time))}</Text>
       <AntDesign name="heart" size={14} color="#DD0000" />
       <Text style={styles.upvotes}> {item?.upvoteCount}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

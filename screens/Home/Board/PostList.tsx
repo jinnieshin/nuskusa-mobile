@@ -98,6 +98,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   const handleDropDownList = () => {
     dispatch(setShowBoardDropDownList(!showDropDownList));
   };
+  console.log(currentBoardPage);
 
   return (
     <View style={{ flex: 1 }}>

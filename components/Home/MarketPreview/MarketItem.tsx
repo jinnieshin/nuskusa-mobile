@@ -1,32 +1,85 @@
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import timeAgo from "../../TimeAgo";
+import { PostSummary } from "../../../types/PostSummary";
+//@ts-ignore
+import { REACT_APP_HOST } from "@env";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentBoardPage } from "../../../redux/features/currentBoardPage";
+import { setRefresh } from "../../../redux/features/refresher";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 
-const MarketItem = () => {
+type Props = {
+  navigation: any;
+  post: any;
+  title: string;
+  time: any;
+};
+
+const MarketItem = ({ navigation, post, title, time }: Props) => {
+  const [item, setItem] = useState<any>();
+
+  const refresh = useSelector((state: any) => state.refresh.value);
+  const user = useSelector((state: any) => state.user.value);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchPostDetails(post);
+  }, [refresh]);
+
+  const fetchPostDetails = async (postItem: PostSummary) => {
+    const url = REACT_APP_HOST + "/api/post/getPost/" + postItem.id;
+    const response = await fetch(url, {
+      method: "GET",
+    });
+
+    if (response.status == 200) {
+      const post = await response.json();
+      post.lastModified = new Date(post.updatedAt);
+      post.lastModified.setHours(post.lastModified.getHours() - 8);
+      setItem(post);
+    }
+  };
+
+  const navigateToPost = () => {
+    dispatch(setCurrentBoardPage("market"));
+    dispatch(setRefresh());
+    navigation.navigate("PostScreen", { postId: post.id, email: user.email });
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={navigateToPost} style={styles.container}>
       {/* Image section */}
       <View style={styles.imageContainer} />
 
       {/* Details section */}
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>
-          맥북 프로 16인치 2021년형 1TB SSD 팔아요
-        </Text>
+        <Text style={styles.title}>{title}</Text>
         {/* Likes, comments and time */}
         <View style={styles.infoContainer}>
-          <Text style={{ fontSize: 10, marginRight: 10 }}>2시간 전</Text>
+          <Text style={{ fontSize: 10, marginRight: 10 }}>
+            {timeAgo(new Date(time))}
+          </Text>
           <FontAwesome5 name="comment" size={14} color="black" />
           <Text style={{ fontSize: 10, fontWeight: "700", marginRight: 10 }}>
-            {"  "}3
+            {"  "}
+            {item?.commentCount}
           </Text>
           <AntDesign name="heart" size={14} color="#DD0000" />
           <Text style={{ fontSize: 10, fontWeight: "700", marginRight: 10 }}>
-            {"  "}3
+            {"  "}
+            {item?.upvoteCount}
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

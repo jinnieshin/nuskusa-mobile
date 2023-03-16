@@ -23,7 +23,6 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     fetchPost();
   }, [refresh]);
 
-  console.log(REACT_APP_HOST);
   const fetchPost = async () => {
     const url = REACT_APP_HOST + "/api/post/getPost/" + postId;
     const response = await fetch(url, {

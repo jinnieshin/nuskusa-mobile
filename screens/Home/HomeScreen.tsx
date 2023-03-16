@@ -1,17 +1,47 @@
-import { ScrollView, StyleSheet, Dimensions } from "react-native";
-import { View, Text } from "../../components/Themed";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import Banner from "../../components/Banner";
 import { useEffect, useState } from "react";
 import BoardPreviewTab from "../../components/Home/BoardPreview/BoardPreviewTab";
 import MarketItemList from "../../components/Home/MarketPreview/MarketItemList";
 import JobsItemList from "../../components/Home/JobsPreview/JobsItemList";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentBoardPage } from "../../redux/features/currentBoardPage";
+//@ts-ignore
+import { REACT_APP_HOST } from "@env";
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   useEffect(() => {}, []);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: any) => state.user.value);
+
+  const navigateToAnnouncement = async () => {
+    dispatch(setCurrentBoardPage("announcement"));
+    const url = REACT_APP_HOST + "/api/board/getPosts/" + "announcement";
+    const response = await fetch(url, {
+      method: "GET",
+    });
+    if (response.status == 200) {
+      const posts = await response.json();
+      // navigate to the most top post; DOES NOT EXCLUDE PINNED POSTS
+      const recentAnnouncementId = posts[0].id;
+      navigation.navigate("PostScreen", {
+        postId: recentAnnouncementId,
+        email: user.email,
+      });
+    }
+  };
 
   return (
-    <View>
+    <View style={{ backgroundColor: "white" }}>
       <Banner
         navigation={navigation}
         iconLeft="menu"
@@ -22,12 +52,15 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         contentContainerStyle={{ alignItems: "center", paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.announcementContainer}>
+        <TouchableOpacity
+          onPress={navigateToAnnouncement}
+          style={styles.announcementContainer}
+        >
           <Text style={styles.announcementLabel}>공지</Text>
           <Text style={styles.announcementContent}>
             안녕하세요 NUS 한인회입니다
           </Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.boardPreviewContainer}>
           <BoardPreviewTab navigation={navigation} />
         </View>

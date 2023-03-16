@@ -62,8 +62,6 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
     }
   };
 
-  console.log(postArr.length);
-
   const fetchPosts = async () => {
     setLoading(true);
     const url = REACT_APP_HOST + "/api/board/getPosts/" + boardType;

@@ -13,7 +13,7 @@ import { REACT_APP_HOST } from "@env";
 import { AntDesign } from "@expo/vector-icons";
 import { setCurrentBoardPage } from "../../../redux/features/currentBoardPage";
 import { setRefresh } from "../../../redux/features/refresher";
-import timeAgo from "../../../components/TimeAgo";
+import timeAgo from "../../TimeAgo";
 import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
@@ -21,16 +21,9 @@ type Props = {
   post: PostSummary;
   content: string;
   time: number;
-  boardType: string;
 };
 
-const PostPreviewItem = ({
-  navigation,
-  post,
-  content,
-  time,
-  boardType,
-}: Props) => {
+const JobPreviewItem = ({ navigation, post, content, time }: Props) => {
   const [item, setItem] = useState<any>();
 
   const dispatch = useDispatch();
@@ -56,7 +49,7 @@ const PostPreviewItem = ({
   };
 
   const navigateToPost = () => {
-    dispatch(setCurrentBoardPage(boardType));
+    dispatch(setCurrentBoardPage("jobs"));
     dispatch(setRefresh());
     navigation.navigate("PostScreen", { postId: post.id, email: user.email });
   };
@@ -71,7 +64,7 @@ const PostPreviewItem = ({
   );
 };
 
-export default PostPreviewItem;
+export default JobPreviewItem;
 
 const { width, height } = Dimensions.get("window");
 

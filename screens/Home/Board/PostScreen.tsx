@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
   const postId = route.params.postId;
+  const userEmail = route.params.email;
   const [currentPost, setPost] = useState<any>({});
 
   const currentBoardPage: string = useSelector(
@@ -22,7 +23,6 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     fetchPost();
   }, [refresh]);
 
-  console.log(REACT_APP_HOST);
   const fetchPost = async () => {
     const url = REACT_APP_HOST + "/api/post/getPost/" + postId;
     const response = await fetch(url, {
@@ -52,13 +52,14 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
           lastModified={currentPost.lastModified}
         />
         <PostContent
+          navigation={navigation}
           postId={postId}
           title={currentPost.title}
           content={currentPost.content}
           upvoteCount={currentPost.upvoteCount}
           upvoted={currentPost.upvoted}
           commentCount={currentPost.commentCount}
-          author={currentPost.author}
+          userEmail={userEmail}
         />
       </ScrollView>
     </View>

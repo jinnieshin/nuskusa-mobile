@@ -38,6 +38,8 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
     (state: any) => state.showBoardDropDownList.value
   );
 
+  const refresh = useSelector((state: any) => state.refresh.value);
+
   const navigateAddPost = () => {
     navigation.navigate("AddPostScreen");
   };
@@ -52,7 +54,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
 
   useEffect(() => {
     fetchPosts();
-  }, [currentBoardPage]);
+  }, [currentBoardPage, refresh]);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -96,6 +98,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   const handleDropDownList = () => {
     dispatch(setShowBoardDropDownList(!showDropDownList));
   };
+  console.log(currentBoardPage);
 
   return (
     <View style={{ flex: 1 }}>

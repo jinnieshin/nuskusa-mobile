@@ -41,7 +41,7 @@ const PostThumbnail = ({
   };
 
   const handlePostPress = () => {
-    navigation.navigate("PostScreen", { postId: id });
+    navigation.navigate("PostScreen", { postId: id, email: email });
   };
 
   const currentUser = useSelector((state: any) => state.user.value);
@@ -69,19 +69,7 @@ const PostThumbnail = ({
               <Text style={styles.time}>{timeAgo(new Date(lastModified))}</Text>
             </View>
           </View>
-          {email === currentUser.email && (
-            <TouchableOpacity
-              onPress={() => console.log("ok")}
-              style={{
-                // for larger pressable area
-                width: 50,
-                height: 30,
-                alignItems: "flex-end",
-              }}
-            >
-              <Feather name="edit-3" size={20} color="#BCA06D" />
-            </TouchableOpacity>
-          )}
+
           {isPinned && (
             <AntDesign
               name="pushpin"
@@ -102,7 +90,7 @@ const PostThumbnail = ({
           {title.length > 23 && "..."}
         </Text>
         {/* <RenderHtml source={source}/> */}
-        <Text style={styles.content}>{renderedContent.slice(0, 70)}...</Text>
+        <Text style={styles.content}>{renderedContent.slice(0, 80)}</Text>
       </View>
     </TouchableOpacity>
   );

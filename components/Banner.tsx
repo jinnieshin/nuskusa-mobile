@@ -41,9 +41,11 @@ const Banner = ({
         )}
         <Text style={styles.text}>NUSKS</Text>
 
-        {iconRight ? (
+        {/* Removed notification feature for now */}
+        {/* {iconRight ? ( */}
+        {false ? (
           <TouchableOpacity onPress={handleNotification}>
-            <Ionicons name={iconRight} size={26} color="white" />
+            {/* <Ionicons name={iconRight} size={26} color="white" /> */}
           </TouchableOpacity>
         ) : (
           <View style={{ width: 20, height: 20 }}></View> // This is for 'none'

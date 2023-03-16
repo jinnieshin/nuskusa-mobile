@@ -15,7 +15,7 @@ import Replies from "./Replies";
 import { REACT_APP_HOST } from "@env";
 import * as Animatable from "react-native-animatable";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-import PostComment from "./PostComment";
+import EditComment from "./EditComment";
 import { useSelector, useDispatch } from "react-redux";
 import PostReplies from "./PostReplies";
 import { setCommentContent } from "../../../redux/features/commentContent";
@@ -50,8 +50,10 @@ const Comments = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
   const [writeReplies, setWriteReplies] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const refresh: string = useSelector((state: any) => state.refresh.value);
+  const currentUser: any = useSelector((state: any) => state.user.value);
 
   const openReplies = () => {
     setWriteReplies(true);
@@ -77,6 +79,33 @@ const Comments = ({
     } else {
       Alert.alert("좋아요 처리에 실패했습니다.");
     }
+  };
+
+  const deleteComment = async () => {
+    const url = REACT_APP_HOST + "/api/post/deleteComment/" + id;
+    console.log(url);
+    const response = await fetch(url, {
+      method: "POST",
+    });
+    console.log("DELETE RESPONSE: ", response.status);
+    if (response.status === 200) {
+      dispatch(setRefresh());
+    } else {
+      Alert.alert(
+        "댓글을 삭제하지 못했습니다. 삭제 권한이 없을 수도 있습니다. 오류가 계속되면 하단의 Contact Us 양식을 통해 문의해주세요."
+      );
+    }
+  };
+
+  const handleDeletePress = async () => {
+    Alert.alert("댓글을 삭제하시겠습니까?", "", [
+      {
+        text: "아니오",
+        onPress: () => {},
+        style: "cancel",
+      },
+      { text: "예", onPress: deleteComment },
+    ]);
   };
 
   const addReply = async () => {
@@ -116,9 +145,39 @@ const Comments = ({
       setRepliesArr(repliesArr);
     }
   };
+  const editComment = async () => {
+    if (comment == "") {
+      Alert.alert("댓글 내용을 작성해주세요.");
+      return;
+    }
+    const url = REACT_APP_HOST + "/api/post/editComment/" + id;
+    console.log("CURRENT COMMENT: ", comment);
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        content: comment,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("EDIT RESPONSE: ", response.status);
+    if (response.status === 201) {
+      setIsEditing(false);
+      dispatch(setRefresh());
+    } else {
+      Alert.alert(
+        "댓글 수정에 실패했습니다. 오류가 계속되면 한인회 IT팀에게 문의해주세요."
+      );
+    }
+  };
 
   const handleLoadReplies = () => {
     setShowReplies(!showReplies);
+  };
+
+  const handleOpenEdit = () => {
+    setIsEditing(!isEditing);
   };
 
   useEffect(() => {
@@ -130,7 +189,7 @@ const Comments = ({
     // Keyboard.
   };
 
-  return (
+  return isEditing ? (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         {profileImage == "" ? (
@@ -140,103 +199,156 @@ const Comments = ({
         )}
       </View>
       <View style={styles.contentContainer}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.name}>{author}</Text>
-          <Text style={{ fontSize: 9 }}>
-            {"    "}
-            25분 전
-          </Text>
-        </View>
-        <Text style={styles.content}>{content}</Text>
-
-        <View style={styles.buttonsContainer}>
-          <Text style={[styles.buttons, { marginRight: 20 }]}>
-            좋아요 {upvoteCount}개
-          </Text>
-          <TouchableOpacity onPress={openReplies}>
-            <Text style={styles.buttons}>답글 쓰기</Text>
+        <EditComment postId={postId} commentId={id} prevContent={content} />
+        <View style={styles.postButtonsContainer}>
+          <TouchableOpacity onPress={handleOpenEdit}>
+            <Text style={styles.cancelButton}>취소</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={editComment}>
+            <Text style={styles.postButton}>수정</Text>
           </TouchableOpacity>
         </View>
-        {writeReplies && (
-          <View>
-            <PostReplies postId={postId} commentId={id} />
-            <View style={styles.postButtonsContainer}>
-              <TouchableOpacity onPress={cancelReply}>
-                <Text style={styles.cancelButton}>취소</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={addReply}>
-                <Text style={styles.postButton}>게시</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-        {/* If there exist replies to the comment, have a button to load them */}
-        {repliesArr.length > 0 && !showReplies ? (
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 13,
-            }}
-            onPress={handleLoadReplies}
-          >
-            <View
-              style={{ width: 20, height: 1, backgroundColor: "#808080" }}
-            />
-            <Text style={styles.replyButton}>
-              {"  "}
-              답글 {repliesArr.length}개 더 보기
-            </Text>
-          </TouchableOpacity>
+      </View>
+    </View>
+  ) : (
+    // </View>
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        {profileImage == "" ? (
+          <View style={styles.image} />
         ) : (
-          repliesArr.length > 0 && (
-            <Animatable.View>
-              {repliesArr.map((reply: any) => {
-                return (
-                  <Replies
-                    id={reply.id}
-                    author={reply.author.name}
-                    content={reply.content}
-                    upvoteCount={reply.upvoteCount}
-                    upvoted={reply.upvoted}
-                    postId={reply.post}
-                    lastModified={new Date(reply.updatedAt)}
-                    replyTo={reply.replyTo}
-                    isMine={reply.isMine}
-                    profileImage={reply.author.profileImageUrl}
-                  />
-                );
-              })}
-              <TouchableOpacity
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 13,
-                }}
-                onPress={handleLoadReplies}
-              >
-                <View
-                  style={{ width: 20, height: 1, backgroundColor: "#808080" }}
-                />
-                <Text style={styles.replyButton}>
-                  {"  "}
-                  답글 숨기기
-                </Text>
-              </TouchableOpacity>
-            </Animatable.View>
-          )
+          <Image style={styles.image} source={{ uri: profileImage }}></Image>
         )}
       </View>
-      <TouchableOpacity
-        style={{ flex: 0.08, height: 20, alignItems: "center" }}
-        onPress={upvoteComment}
-      >
-        {upvoted ? (
-          <FontAwesome name="heart" size={13} color="#DD0000" />
-        ) : (
-          <Feather name="heart" size={13} color="black" />
-        )}
-      </TouchableOpacity>
+      <>
+        <View style={styles.contentContainer}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.name}>{author}</Text>
+            <Text style={{ fontSize: 9 }}>
+              {"    "}
+              25분 전
+            </Text>
+          </View>
+          <Text style={styles.content}>{content}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={styles.buttonsContainer}>
+              <Text style={[styles.buttons, { marginRight: 20 }]}>
+                좋아요 {upvoteCount}개
+              </Text>
+              <TouchableOpacity onPress={openReplies}>
+                <Text style={styles.buttons}>답글 쓰기</Text>
+              </TouchableOpacity>
+            </View>
+            {isMine && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "flex-end",
+                  top: -1,
+                }}
+              >
+                <TouchableOpacity onPress={handleOpenEdit}>
+                  <Text style={styles.editButtons}>수정</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleDeletePress}
+                  style={{ marginLeft: 15 }}
+                >
+                  <Text style={[styles.editButtons]}>삭제</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+          {writeReplies && (
+            <View>
+              <PostReplies postId={postId} commentId={id} />
+              <View style={styles.postButtonsContainer}>
+                <TouchableOpacity onPress={cancelReply}>
+                  <Text style={styles.cancelButton}>취소</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={addReply}>
+                  <Text style={styles.postButton}>게시</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          {/* If there exist replies to the comment, have a button to load them */}
+          {repliesArr.length > 0 && !showReplies ? (
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 13,
+              }}
+              onPress={handleLoadReplies}
+            >
+              <View
+                style={{ width: 20, height: 1, backgroundColor: "#808080" }}
+              />
+              <Text style={styles.replyButton}>
+                {"  "}
+                답글 {repliesArr.length}개 더 보기
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            repliesArr.length > 0 && (
+              <Animatable.View>
+                {repliesArr.map((reply: any) => {
+                  return (
+                    <Replies
+                      id={reply.id}
+                      author={reply.author.name}
+                      content={reply.content}
+                      upvoteCount={reply.upvoteCount}
+                      upvoted={reply.upvoted}
+                      postId={reply.post}
+                      lastModified={new Date(reply.updatedAt)}
+                      replyTo={reply.replyTo}
+                      isMine={reply.isMine}
+                      profileImage={reply.author.profileImageUrl}
+                    />
+                  );
+                })}
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 13,
+                  }}
+                  onPress={handleLoadReplies}
+                >
+                  <View
+                    style={{
+                      width: 20,
+                      height: 1,
+                      backgroundColor: "#808080",
+                    }}
+                  />
+                  <Text style={styles.replyButton}>
+                    {"  "}
+                    답글 숨기기
+                  </Text>
+                </TouchableOpacity>
+              </Animatable.View>
+            )
+          )}
+        </View>
+        <TouchableOpacity
+          style={{ flex: 0.08, height: 20, alignItems: "center" }}
+          onPress={upvoteComment}
+        >
+          {upvoted ? (
+            <FontAwesome name="heart" size={13} color="#DD0000" />
+          ) : (
+            <Feather name="heart" size={13} color="black" />
+          )}
+        </TouchableOpacity>
+      </>
     </View>
   );
 };
@@ -281,6 +393,11 @@ const styles = StyleSheet.create({
   buttons: {
     fontSize: 10.5,
     fontWeight: "700",
+  },
+  editButtons: {
+    fontSize: 10.5,
+    fontWeight: "700",
+    color: "grey",
   },
   replyButton: {
     fontSize: 12,

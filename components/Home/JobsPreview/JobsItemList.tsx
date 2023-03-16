@@ -10,6 +10,7 @@ import PostPreviewItem from "../BoardPreview/PostPreviewItem";
 import { PostSummary } from "../../../types/PostSummary";
 //@ts-ignore
 import { REACT_APP_HOST } from "@env";
+import JobPreviewItem from "./JobPreviewItem";
 import { useDispatch } from "react-redux";
 import { setCurrentBoardPage } from "../../../redux/features/currentBoardPage";
 
@@ -106,11 +107,11 @@ const JobsItemList = ({ navigation }: { navigation: any }) => {
           showsVerticalScrollIndicator={false}
         /> */}
             {postArr.map((item) => (
-              <PostPreviewItem
+              <JobPreviewItem
+                navigation={navigation}
                 post={item}
                 content={item.title}
                 time={item.createdAt}
-                upvoteCount={1}
               />
             ))}
           </View>

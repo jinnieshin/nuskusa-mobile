@@ -42,13 +42,10 @@ import Others from "../screens/Authentication/SignUp/Forms/Others";
 import Congrats from "../screens/Authentication/SignUp/Congrats";
 import HomeScreen from "../screens/Home/HomeScreen";
 import PostList from "../screens/Home/Board/PostList";
-import GeneralBoard from "../screens/Home/Board/GeneralBoard";
-import Announcement from "../screens/Home/Board/Announcement";
 import PostScreen from "../screens/Home/Board/PostScreen";
 import AddPostScreen from "../screens/Home/Board/AddPostScreen";
 import NotificationDrawerScreen from "../screens/Home/Notification/NotificationDrawerScreen";
 import EditPostScreen from "../screens/Home/Board/EditPostScreen";
-
 import { useDispatch, useSelector } from "react-redux";
 import EditProfileScreen from "../screens/Home/Profile/EditProfileScreen";
 import DrawerContent from "../components/Drawer/DrawerContent";
@@ -227,22 +224,8 @@ const Board = () => {
         }}
       />
       <BoardStack.Screen
-        name="Announcement"
-        component={Announcement}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <BoardStack.Screen
         name="PostList"
         component={PostList}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <BoardStack.Screen
-        name="GeneralBoard"
-        component={GeneralBoard}
         options={{
           headerShown: false,
         }}

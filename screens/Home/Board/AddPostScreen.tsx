@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 17,
     flex: 1,
+    backgroundColor: "white"
   },
   boardType: {
     fontSize: 13,

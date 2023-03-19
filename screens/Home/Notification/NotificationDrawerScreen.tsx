@@ -1,5 +1,4 @@
-import { StyleSheet, SafeAreaView } from "react-native";
-import { View, Text } from "../../../components/Themed";
+import { StyleSheet, SafeAreaView, View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import NotificationItem from "../../../components/Notification/NotificationItem";
 //@ts-ignore

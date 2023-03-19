@@ -5,8 +5,9 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   ActivityIndicator,
+  View,
+  Text
 } from "react-native";
-import { View, Text } from "../../../components/Themed";
 import React, { useEffect, useState } from "react";
 import Banner from "../../../components/Banner";
 import BoardHeader from "../../../components/Board/BoardHeader";
@@ -89,7 +90,6 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
         // postArray.push(postObject);
         postArray.push(post);
       }
-      console.log(postArray[2]);
       setPostArray(postArray);
       setLoading(false);
     }
@@ -98,10 +98,9 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   const handleDropDownList = () => {
     dispatch(setShowBoardDropDownList(!showDropDownList));
   };
-  console.log(currentBoardPage);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <Banner
         navigation={navigation}
         iconLeft="menu"
@@ -174,6 +173,7 @@ const styles = StyleSheet.create({
   container: {
     // marginTop: 40,
     paddingHorizontal: 17,
+    backgroundColor: "white"
   },
   headerContainer: {
     flexDirection: "row",

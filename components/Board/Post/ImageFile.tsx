@@ -1,4 +1,3 @@
-import { View, Text } from "../../../components/Themed";
 import {
   StyleSheet,
   Dimensions,
@@ -6,6 +5,8 @@ import {
   TouchableOpacity,
   Modal,
   Button,
+  View,
+  Text
 } from "react-native";
 import React from "react";
 

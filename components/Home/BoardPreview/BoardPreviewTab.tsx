@@ -12,8 +12,8 @@ import BoardPreviewList from "./BoardPreviewList";
 const BoardPreviewTab = ({ navigation }: { navigation: any }) => {
   const [tab, setTab] = useState<string>("general");
 
-  const handleHotPress = () => {
-    setTab("Hot");
+  const handleAdminPress = () => {
+    setTab("announcement");
   };
 
   const handleGeneralPress = () => {
@@ -32,14 +32,14 @@ const BoardPreviewTab = ({ navigation }: { navigation: any }) => {
     <View style={styles.container}>
       {/* Board tabs */}
       <View style={styles.tabsContainer}>
-        <TouchableWithoutFeedback onPress={handleHotPress}>
+        <TouchableWithoutFeedback onPress={handleAdminPress}>
           <View
             style={[
               styles.tabIndivWrapper,
-              { backgroundColor: tab != "Hot" ? "#DADADA" : "#F3F4F6" },
+              { backgroundColor: tab != "announcement" ? "#DADADA" : "#F3F4F6" },
             ]}
           >
-            <Text style={styles.tabsText}>HOT</Text>
+            <Text style={styles.tabsText}>공지</Text>
           </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={handleGeneralPress}>

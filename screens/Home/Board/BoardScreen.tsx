@@ -1,5 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
-import { View, Text } from "../../../components/Themed";
+import { StyleSheet, Dimensions, View, Text } from "react-native";
 import React from "react";
 import Banner from "../../../components/Banner";
 import BoardTypeSelect from "../../../components/Board/BoardTypeSelect";
@@ -36,7 +35,7 @@ const BoardScreen = ({ navigation }: { navigation: any }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <Banner
         navigation={navigation}
         iconLeft="menu"

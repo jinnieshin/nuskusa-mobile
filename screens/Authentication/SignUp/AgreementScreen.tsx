@@ -1,5 +1,4 @@
-import { StyleSheet, TouchableOpacity, Image, Platform } from "react-native";
-import { View, Text } from "../../../components/Themed";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "../../../components/Authentication/CustomButton";

@@ -1,16 +1,15 @@
 import {
-  Image,
   StyleSheet,
   Platform,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  KeyboardAvoidingView,
   Animated,
   Dimensions,
+  View,
+  Text
 } from "react-native";
-import { View, Text } from "../../components/Themed";
 import CheckBox from "expo-checkbox";
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -58,7 +57,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
           "Content-Type": "application/json",
         },
       });
-      console.log(response.status);
       if (response.status == 200) {
         setLoading(false);
         const userdata = await response.json();
@@ -70,7 +68,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
             "userPassword",
             sha512(password).toString()
           );
-          console.log("SAVED");
         }
       } else {
         Alert.alert(
@@ -78,8 +75,10 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         );
       }
     } catch (error) {
-      Alert.alert(error.message);
-      console.log(error.message);
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+        console.log(error.message);
+      }
     }
   };
 
@@ -198,16 +197,12 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
               <Text style={styles.checkboxText}>로그인 유지</Text>
             </View>
             <CustomButton
-              isDark={true}
               text="Submit"
+              isDark={true}
               handlePress={handleSubmit(handleLogin)}
             />
 
             <View style={styles.textButtonContainer}>
-              <TouchableOpacity>
-                <Text style={styles.textButtons}>아이디 찾기</Text>
-              </TouchableOpacity>
-              <Text style={styles.textButtons}>|</Text>
               <TouchableOpacity onPress={handleResetPassword}>
                 <Text style={styles.textButtons}>비밀번호 찾기</Text>
               </TouchableOpacity>
@@ -231,6 +226,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
+    backgroundColor: "white"
   },
 
   dummyLogo: {
@@ -256,6 +252,7 @@ const styles = StyleSheet.create({
   textBoxContainer: {
     // position: "relative",
     // top: 185,
+    zIndex: 1
   },
   checkBoxSection: {
     fontFamily: Platform.OS === "ios" ? "Arial" : "Roboto",

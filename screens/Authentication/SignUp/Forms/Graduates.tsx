@@ -105,7 +105,9 @@ function Graduates({ navigation }: { navigation: any }): JSX.Element {
         Alert.alert("프로필 생성에 실패했습니다: " + signUpResponse.body);
       }
     } catch (error) {
-      Alert.alert(error.code + error.message);
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
     } finally {
       navigation.navigate("congrats");
     }
@@ -128,7 +130,9 @@ function Graduates({ navigation }: { navigation: any }): JSX.Element {
         setFile(res);
       }
     } catch (error) {
-      Alert.alert(error.message);
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
     } finally {
       console.log("file uploaded");
     }

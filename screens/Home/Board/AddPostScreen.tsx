@@ -1,17 +1,16 @@
 import {
   StyleSheet,
   TextInput,
-  ScrollView,
   Dimensions,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
   Platform,
-  Image,
   Alert,
+  View,
+  Text
 } from "react-native";
-import { View, Text } from "../../../components/Themed";
 import Banner from "../../../components/Banner";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,11 +43,8 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
       quality: 1,
     });
 
-    // console.log("sadad", result);
-
     if (!result.cancelled) {
       setImage(result?.uri);
-      console.log("asdlfkjasldk", result);
     }
   };
 
@@ -56,7 +52,6 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
   const uploadImage = async () => {
     const formData = new FormData();
     formData.append("file", image);
-    console.log(image);
     //@ts-ignore
     const ref = userdata.email + "(" + userdata.name + ")_" + image;
     const url = REACT_APP_HOST + "/api/post/uploadPostAttachment/" + image;
@@ -64,7 +59,6 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
       method: "POST",
       body: formData,
     });
-    console.log("respones: ", response);
     if (response.status !== 200) {
       Alert.alert("파일 업로드에 실패했습니다. " + response.body);
     }
@@ -125,7 +119,6 @@ const AddPostScreen = ({ navigation }: { navigation: any }) => {
     Alert.alert("게시물을 올리겠습니까?", "게시물은 수정, 삭제가 가능합니다.", [
       {
         text: "아니오",
-        onPress: () => console.log("아니오 Pressed"),
         style: "cancel",
       },
       { text: "예", onPress: addPost },

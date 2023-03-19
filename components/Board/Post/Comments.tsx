@@ -83,11 +83,9 @@ const Comments = ({
 
   const deleteComment = async () => {
     const url = REACT_APP_HOST + "/api/post/deleteComment/" + id;
-    console.log(url);
     const response = await fetch(url, {
       method: "POST",
     });
-    console.log("DELETE RESPONSE: ", response.status);
     if (response.status === 200) {
       dispatch(setRefresh());
     } else {
@@ -151,7 +149,6 @@ const Comments = ({
       return;
     }
     const url = REACT_APP_HOST + "/api/post/editComment/" + id;
-    console.log("CURRENT COMMENT: ", comment);
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -161,7 +158,6 @@ const Comments = ({
         "Content-Type": "application/json",
       },
     });
-    console.log("EDIT RESPONSE: ", response.status);
     if (response.status === 201) {
       setIsEditing(false);
       dispatch(setRefresh());
@@ -191,13 +187,13 @@ const Comments = ({
 
   return isEditing ? (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      {/* <View style={styles.imageContainer}>
         {profileImage == "" ? (
           <View style={styles.image} />
         ) : (
           <Image style={styles.image} source={{ uri: profileImage }}></Image>
         )}
-      </View>
+      </View> */}
       <View style={styles.contentContainer}>
         <EditComment postId={postId} commentId={id} prevContent={content} />
         <View style={styles.postButtonsContainer}>
@@ -213,13 +209,13 @@ const Comments = ({
   ) : (
     // </View>
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      {/* <View style={styles.imageContainer}>
         {profileImage == "" ? (
           <View style={styles.image} />
         ) : (
           <Image style={styles.image} source={{ uri: profileImage }}></Image>
         )}
-      </View>
+      </View> */}
       <>
         <View style={styles.contentContainer}>
           <View style={{ flexDirection: "row" }}>
@@ -360,7 +356,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    width: width * 0.9,
+    width: width,
     flexDirection: "row",
     padding: 10,
   },

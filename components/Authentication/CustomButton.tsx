@@ -46,5 +46,6 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === "ios" ? "Arial" : "Roboto",
     fontWeight: "700",
     fontSize: 17,
+    color: "black"
   },
 });

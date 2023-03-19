@@ -7,7 +7,7 @@ const Badge = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      {/* <View style={styles.imageContainer}>
         {userdata.profileImageUrl == "" ? (
           <View style={styles.image}></View>
         ) : (
@@ -16,7 +16,7 @@ const Badge = () => {
             source={{ uri: userdata.profileImageUrl }}
           ></Image>
         )}
-      </View>
+      </View> */}
       <View style={styles.nameContainer}>
         <Text style={styles.name}>{userdata.name}</Text>
         <Text style={styles.major}>{userdata.major}</Text>
@@ -30,9 +30,10 @@ export default Badge;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    //justifyContent: "space-around",
     height: 102,
-    marginHorizontal: 10,
+    //marginHorizontal: 10,
+    marginLeft: 40
   },
   imageContainer: {
     flex: 0.5,
@@ -57,5 +58,5 @@ const styles = StyleSheet.create({
   major: {
     fontSize: 15,
     flexShrink: 1,
-  },
+  }
 });

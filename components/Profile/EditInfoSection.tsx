@@ -110,10 +110,11 @@ const EditInfoSection = ({
         }
       }
     } catch (error) {
-      Alert.alert(error.code + error.message);
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
     } finally {
       navigation.goBack();
-      console.log("Profile edited");
     }
   };
 

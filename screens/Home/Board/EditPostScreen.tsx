@@ -10,8 +10,9 @@ import {
   Platform,
   Image,
   Alert,
+  View,
+  Text
 } from "react-native";
-import { View, Text } from "../../../components/Themed";
 import Banner from "../../../components/Banner";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,11 +52,8 @@ const EditPostScreen = ({
       quality: 1,
     });
 
-    // console.log("sadad", result);
-
     if (!result.cancelled) {
       setImage(result?.uri);
-      console.log("asdlfkjasldk", result);
     }
   };
 
@@ -71,7 +69,6 @@ const EditPostScreen = ({
       method: "POST",
       body: formData,
     });
-    console.log("respones: ", response);
     if (response.status !== 200) {
       Alert.alert("파일 업로드에 실패했습니다. " + response.body);
     }
@@ -134,7 +131,6 @@ const EditPostScreen = ({
     Alert.alert("게시물을 수정하시겠습니까?", "", [
       {
         text: "아니오",
-        onPress: () => console.log("아니오 Pressed"),
         style: "cancel",
       },
       { text: "예", onPress: editPost },

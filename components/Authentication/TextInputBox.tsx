@@ -39,6 +39,7 @@ const textInputBox = ({
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder={placeholder}
+              placeholderTextColor={"grey"}
               secureTextEntry={secureTextEntry}
               style={styles.input}
               autoCapitalize="none"

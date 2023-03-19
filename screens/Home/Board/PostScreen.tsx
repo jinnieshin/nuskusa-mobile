@@ -1,5 +1,4 @@
-import { StyleSheet, ScrollView, Dimensions } from "react-native";
-import { View } from "../../../components/Themed";
+import { StyleSheet, ScrollView, Dimensions, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Banner from "../../../components/Banner";
 import PostProfileBanner from "../../../components/Board/Post/PostProfileBanner";
@@ -33,7 +32,6 @@ const PostScreen = ({ navigation, route }: { navigation: any; route: any }) => {
       const post = await response.json();
       post.lastModified = new Date(post.updatedAt);
       post.lastModified.setHours(post.lastModified.getHours());
-      console.log("Post", post);
       setPost(post);
     }
   };
@@ -73,5 +71,6 @@ const { width, height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   container: {
     height: height * 0.75,
+    backgroundColor: "white"
   },
 });

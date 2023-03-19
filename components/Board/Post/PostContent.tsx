@@ -46,7 +46,6 @@ const PostContent = ({
   const currentUser = useSelector((state: any) => state.user.value);
 
   const dispatch = useDispatch();
-  console.log(content);
 
   const upvotePost = async () => {
     const url =
@@ -126,11 +125,8 @@ const PostContent = ({
     const response = await fetch(url, {
       method: "GET",
     });
-    console.log(url);
-    console.log(response.status);
     if (response.status == 200) {
       const commentArr = await response.json();
-      console.log("Comment", commentArr);
       setCommentArr(commentArr);
     }
   };
@@ -221,8 +217,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: width * 0.9,
     borderBottomWidth: 1,
-    height: 40,
+    paddingBottom:10,
     marginBottom: 20,
+    flexDirection: "row"
   },
   contentContainer: {
     padding: 3,
@@ -232,6 +229,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     // marginLeft: 5,
+    width: width * 0.9,
+    flex: 1,
+    flexWrap: "wrap"
   },
   contentCommentDivider: {
     flexDirection: "row",

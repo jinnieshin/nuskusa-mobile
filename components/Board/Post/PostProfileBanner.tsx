@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import React from "react";
-import { Octicons, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import timeAgo from "../../TimeAgo";
 
 type Props = {
@@ -23,8 +23,8 @@ const PostProfileBanner = ({ name, boardType, lastModified }: Props) => {
     <View style={styles.container}>
       <View style={styles.upperContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.profileImage} />
-          <View style={{ marginLeft: 10 }}>
+          {/* <View style={styles.profileImage} /> */}
+          <View style={{ marginLeft: 0 /*10*/ }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={styles.name}>{name}</Text>
               <Text style={[styles.subtitles, { top: -2 }]}>
@@ -34,7 +34,7 @@ const PostProfileBanner = ({ name, boardType, lastModified }: Props) => {
               </Text>
             </View>
             <Text style={styles.subtitles}>
-              {timeAgo(new Date(lastModified))} (최근 수정: 10/21 13:49)
+              {timeAgo(new Date(lastModified))}
             </Text>
           </View>
         </View>

@@ -102,11 +102,9 @@ const Replies = ({
 
   const deleteComment = async () => {
     const url = REACT_APP_HOST + "/api/post/deleteComment/" + id;
-    console.log(url);
     const response = await fetch(url, {
       method: "POST",
     });
-    console.log("DELETE RESPONSE: ", response.status);
     if (response.status === 200) {
       dispatch(setRefresh());
     } else {
@@ -132,7 +130,6 @@ const Replies = ({
       return;
     }
     const url = REACT_APP_HOST + "/api/post/editComment/" + id;
-    console.log("CURRENT COMMENT: ", comment);
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -158,13 +155,13 @@ const Replies = ({
 
   return isEditing ? (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      {/* <View style={styles.imageContainer}>
         {profileImage == "" ? (
           <View style={styles.image} />
         ) : (
           <Image style={styles.image} source={{ uri: profileImage }}></Image>
         )}
-      </View>
+      </View> */}
       <View style={styles.contentContainer}>
         <EditComment postId={postId} commentId={id} prevContent={content} />
         <View style={styles.postButtonsContainer}>
@@ -180,13 +177,13 @@ const Replies = ({
   ) : (
     <View>
       <View style={styles.container}>
-        <View style={styles.imageContainer}>
+        {/* <View style={styles.imageContainer}>
           {profileImage == "" ? (
             <View style={styles.image} />
           ) : (
             <Image style={styles.image} source={{ uri: profileImage }}></Image>
           )}
-        </View>
+        </View> */}
         <View style={styles.contentContainer}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.name}>{author}</Text>
@@ -264,11 +261,12 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    width: width * 0.9 - 54,
+    width: width,
     // borderWidth: 1,
     flexDirection: "row",
-    padding: 10,
-    paddingLeft: 0,
+    paddingLeft: 10,
+    paddingBottom: 10,
+    paddingTop: 10,
   },
   imageContainer: {
     flex: 0.17,

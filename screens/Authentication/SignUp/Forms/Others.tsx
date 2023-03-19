@@ -34,8 +34,6 @@ function Others({ navigation }: { navigation: any }): JSX.Element {
   const email = watch("Email");
   const password = watch("Password");
 
-  console.log("D:", process.env.REACT_APP_HOST);
-
   const handleSignUp = async () => {
     if (email.split("@")[1] == "u.nus.edu") {
       Alert.alert(
@@ -67,12 +65,13 @@ function Others({ navigation }: { navigation: any }): JSX.Element {
         );
         navigation.navigate("Congrats");
       } else {
-        console.log(response.status);
         setLoading(false);
         Alert.alert("프로필 생성에 실패했습니다: " + response.body);
       }
     } catch (error) {
-      Alert.alert(error.code + error.message);
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
     } finally {
       console.log("done");
     }

@@ -63,7 +63,7 @@ const PostPreviewItem = ({
 
   return (
     <TouchableOpacity onPress={navigateToPost} style={styles.container}>
-      <Text style={styles.contentText}>{content}</Text>
+      <Text style={styles.contentText} numberOfLines={1}>{content}</Text>
       <Text style={styles.timeStamp}>{timeAgo(new Date(time))}</Text>
       <AntDesign name="heart" size={14} color="#DD0000" />
       <Text style={styles.upvotes}> {item?.upvoteCount}</Text>
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
   contentText: {
     fontSize: 12,
     flex: 0.65,
+    marginRight: 10
   },
   timeStamp: {
     fontSize: 12,

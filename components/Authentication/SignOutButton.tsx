@@ -19,7 +19,9 @@ const SignOutButton = ({ navigation }: { navigation: any }) => {
         Alert.alert("로그아웃 중 오류가 발생했습니다: " + response.body);
       }
     } catch (error) {
-      console.log(error.message);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     } finally {
       console.log("SIGNED OUT");
     }

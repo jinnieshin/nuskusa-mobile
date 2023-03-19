@@ -1,6 +1,4 @@
-import { StyleSheet, TouchableOpacity, Dimensions, Alert } from "react-native";
-
-import { Text, View } from "../../../components/Themed";
+import { StyleSheet, TouchableOpacity, Dimensions, Alert, View, Text } from "react-native";
 import Banner from "../../../components/Banner";
 import { useDispatch, useSelector } from "react-redux";
 import SignOutButton from "../../../components/Authentication/SignOutButton";
@@ -15,7 +13,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function ProfileScreen({ navigation }: { navigation: any }) {
   const userdata = useSelector((state: any) => state.user.value);
   const dispatch = useDispatch();
-  console.log("USERDATA: ", userdata);
 
   const initialState = {
     name: "",
@@ -44,6 +41,7 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
         Alert.alert("로그아웃 중 오류가 발생했습니다: " + response.body);
       }
     } catch (error) {
+      if (error instanceof Error)
       console.log(error.message);
     } finally {
       console.log("SIGNED OUT");
@@ -103,6 +101,7 @@ const { width, height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white"
   },
   secondBody: {
     marginVertical: 20,

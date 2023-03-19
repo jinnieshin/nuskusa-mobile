@@ -1,11 +1,12 @@
 import {
+  View,
+  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Platform,
   Dimensions,
 } from "react-native";
-import { View, Text } from "../../../components/Themed";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import StudentTypeButton from "../../../components/Authentication/StudentTypeButton";

@@ -99,7 +99,9 @@ function CurrentStudents({ navigation }: { navigation: any }): JSX.Element {
         Alert.alert("프로필 생성에 실패했습니다: " + response.body);
       }
     } catch (error) {
-      Alert.alert(error.code + error.message);
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
     } finally {
       navigation.navigate("congrats");
     }

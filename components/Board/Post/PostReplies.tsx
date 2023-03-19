@@ -5,8 +5,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  View
 } from "react-native";
-import { View, Text } from "../../Themed";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setOpenCommentInput } from "../../../redux/features/openCommentInput";

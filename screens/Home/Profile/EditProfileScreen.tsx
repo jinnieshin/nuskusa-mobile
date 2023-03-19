@@ -16,10 +16,10 @@ const EditProfileScreen = ({ navigation }: { navigation: any }) => {
   const canChangeEmail = userdata?.email.split("@")[1] != "u.nus.edu";
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={styles.container}>
         <Banner iconLeft="arrow-back" iconRight="" navigation={navigation} />
         <View style={styles.secondBody}>
-          {userdata.profileImageUrl == "" ? (
+          {/* {userdata.profileImageUrl == "" ? (
             <View style={styles.emptyLogo}></View>
           ) : (
             <Image
@@ -27,7 +27,7 @@ const EditProfileScreen = ({ navigation }: { navigation: any }) => {
               source={{ uri: userdata.profileImageUrl }}
             />
           )}
-          <Text style={styles.editTextButton}>프로필 사진 바꾸기</Text>
+          <Text style={styles.editTextButton}>프로필 사진 바꾸기</Text> */}
           <EditInfoSection
             navigation={navigation}
             yearOfBirth={userdata.yearOfBirth}
@@ -47,6 +47,10 @@ const EditProfileScreen = ({ navigation }: { navigation: any }) => {
 export default EditProfileScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  },
   secondBody: {
     marginTop: 20,
     alignItems: "center",

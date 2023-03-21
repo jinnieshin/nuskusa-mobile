@@ -134,11 +134,6 @@ function RootNavigator({ user }: { user: any }) {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="ResetPassword"
-            component={ResetPassword}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name="AgreementScreen"
             component={AgreementScreen}
             options={{ headerShown: false }}
@@ -201,11 +196,6 @@ const Main = () => {
         component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
-      <MainStack.Screen
-        name="EditProfileScreen"
-        component={EditProfileScreen}
-        options={{ headerShown: false }}
-      />
     </MainStack.Navigator>
   );
 };
@@ -254,6 +244,30 @@ const Board = () => {
   );
 };
 
+const ProfileStack = createNativeStackNavigator();
+
+const Profile = () => {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <ProfileStack.Screen
+        name="ResetPassword"
+        component={ResetPassword}
+        options={{ headerShown: false }}
+      />
+    </ProfileStack.Navigator>
+  )
+}
+
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
@@ -296,7 +310,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={Profile}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="person-circle-outline" size={36} color={color} />

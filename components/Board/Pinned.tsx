@@ -8,7 +8,7 @@ const Pinned = ({ navigation, boardType, email } : { navigation: any; boardType:
 
   useEffect(() => {
     switch(boardType) {
-      case "freshman": {
+      case "freshmen": {
         setPostId(6);
         setPostTitle("신입생 게시판 안내");
         break;

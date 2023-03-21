@@ -131,13 +131,13 @@ const BoardPreviewList = ({ navigation, boardType }: Props) => {
             <ActivityIndicator style={{ marginTop: 20 }} />
           ) : (
             postArr.map((item: any) => (
-              <PostPreviewItem
+              !item.isHidden ? <PostPreviewItem
                 navigation={navigation}
                 post={item}
                 content={item.title}
                 time={item.createdAt}
                 boardType={boardType}
-              />
+              /> : <></>
             ))
           )}
         </View>

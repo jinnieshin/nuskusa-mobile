@@ -118,6 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   logOutButtonContainer: {
-    marginTop: "50%",
+    marginTop: "40%",
   },
 });

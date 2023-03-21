@@ -27,7 +27,6 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
   const [postArr, setPostArray] = useState<any>([]);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const { boardType } = route.params;
 
   const dispatch = useDispatch();
 
@@ -132,7 +131,7 @@ const PostList = ({ navigation, route }: { navigation: any; route: any }) => {
             <Feather name="edit" size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <Pinned />
+        <Pinned navigation={navigation} boardType={currentBoardPage} email="nuskusa@gmail.com" />
         <View style={{ height: height - 300 }}>
           {loading ? (
             <ActivityIndicator style={{ marginTop: 5 }} />

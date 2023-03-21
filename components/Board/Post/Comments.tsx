@@ -21,6 +21,7 @@ import PostReplies from "./PostReplies";
 import { setCommentContent } from "../../../redux/features/commentContent";
 import * as Haptics from "expo-haptics";
 import { setRefresh } from "../../../redux/features/refresher";
+import timeAgo from "../../TimeAgo";
 
 type commentObject = {
   id: number;
@@ -51,9 +52,14 @@ const Comments = ({
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
   const [writeReplies, setWriteReplies] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [commentModifiedDate, setCommentModifiedDate] = useState<any>();
 
   const refresh: string = useSelector((state: any) => state.refresh.value);
   const currentUser: any = useSelector((state: any) => state.user.value);
+
+  useEffect(() => {
+    setCommentModifiedDate(timeAgo(new Date(lastModified)))
+  })
 
   const openReplies = () => {
     setWriteReplies(true);
@@ -222,7 +228,7 @@ const Comments = ({
             <Text style={styles.name}>{author}</Text>
             <Text style={{ fontSize: 9 }}>
               {"    "}
-              25분 전
+              {commentModifiedDate}
             </Text>
           </View>
           <Text style={styles.content}>{content}</Text>

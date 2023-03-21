@@ -18,6 +18,7 @@ import { setCommentContent } from "../../../redux/features/commentContent";
 import * as Haptics from "expo-haptics";
 import EditComment from "./EditComment";
 import { setRefresh } from "../../../redux/features/refresher";
+import timeAgo from "../../TimeAgo";
 
 type commentObject = {
   id: number;
@@ -46,6 +47,7 @@ const Replies = ({
 }: commentObject) => {
   const [writeReplies, setWriteReplies] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [replyModifiedDate, setReplyModifiedDate] = useState<any>();
 
   const openReplies = () => {
     setWriteReplies(true);
@@ -57,6 +59,10 @@ const Replies = ({
 
   const comment = useSelector((state: any) => state.commentContent.value);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setReplyModifiedDate(timeAgo(new Date(lastModified)))
+  })
 
   const upvoteComment = async () => {
     const url = REACT_APP_HOST + "/api/post/pushCommentUpvote/" + id;
@@ -187,7 +193,7 @@ const Replies = ({
         <View style={styles.contentContainer}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.name}>{author}</Text>
-            <Text style={{ fontSize: 9 }}>{"    "}25분 전</Text>
+            <Text style={{ fontSize: 9 }}>{"    "}{replyModifiedDate}</Text>
           </View>
           <Text style={styles.content}>{content}</Text>
 
